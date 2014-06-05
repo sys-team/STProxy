@@ -1,8 +1,7 @@
 var https = require("https");
 var url = require("url");
-var iconv  = require('/usr/local/lib/node_modules/iconv');
-//var iconv  = require('../lib/iconv');
-var converter = require("./converter")
+var iconv  = require('./node_modules/iconv');
+//var converter = require("./converter");
 
 function asaRestRequest(
     service,
@@ -43,8 +42,11 @@ function asaRestRequest(
                                             });
                                             
                                             resp.on('end', function() {
+                                                var c = "./converters/asaRestXML2JSON";
+                                                var converter = require(c);
+                                                
                                                 response.writeHead(200, {"Content-Type": "text/plain"});
-                                                str = converter.asaRestXML2JSON(str);
+                                                str = converter.convert(str);
                                                 response.write(str);
                                                 response.end();
                                                 });
