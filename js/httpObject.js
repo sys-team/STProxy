@@ -16,25 +16,4 @@ function parse(
     return result;
 }
 
-function body(
-    request
-)
-{
-    var body = '';
-    
-    request.on('data', function (data)
-                        {
-                            body += data;
-                        });
-    
-    request.on('end', function()
-                        {
-                            //console.log(body);
-                
-                        });
-
-    return body;
-}
-
 exports.parse = parse;
-exports.body = body;
