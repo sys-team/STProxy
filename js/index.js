@@ -1,3 +1,3 @@
-var iproxy = require("./iproxy");
+var STProxy = require("./STProxy");
 
-iproxy.start();
+STProxy.start();

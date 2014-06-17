@@ -1,7 +1,6 @@
 var https = require("https");
 var url = require("url");
 var iconv  = require('./node_modules/iconv');
-//var converter = require("./converter");
 
 function asaRestRequest(
     service,
