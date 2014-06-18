@@ -1,9 +1,21 @@
-function make(
+function makeProxy(
     requestObject,
     routeObject
 )
 {
-    return "test";
+    var result = {};
+    var transHeaders = ["authorization","if-none-match"];
+    
+    result["user-agent"] = "STProxy 0.1";
+    
+    transHeaders.forEach(function(value, ind, arr)
+        {
+            if (requestObject["headers"][value]) {
+                result[value] = requestObject["headers"][value];
+            }
+        });
+    
+    return result;
 }
 
-exports.make = make;
+exports.makeProxy = makeProxy;

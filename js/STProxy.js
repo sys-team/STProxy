@@ -2,6 +2,9 @@ var http = require("http");
 var httpObject = require("./httpObject");
 var router = require("./router");
 var headers = require("./headers");
+var variables = require("./variables");
+var body = require("./body");
+var proxyRequest = require("./request");
 
 function start() {
   
@@ -12,12 +15,15 @@ function start() {
     {
         var requestObject = {};
         var routeObject = {};
-        var httpBody = "";
-        var responseHeaders = "";
+        var requestBody = "";
+        var proxyHeaders = {};
+        var proxyVariables = "";
+        var proxyBody = "";
+        var proxyResponse = "";
 
         request.on("data", function (data)
             {
-                httpBody += data;
+                requestBody += data;
             });
 
         
@@ -25,57 +31,79 @@ function start() {
     
             requestObject = httpObject.parse(request);
             routeObject = router.route(requestObject);
-            responseHeaders = headers.make(requestObject, routeObject);
+            
+            if (!routeObject ) {
+                response.writeHead(404, {"Content-Type": "text/plain"});
+                response.write("No route found");
+                response.end();
+                return;
+            }
+                    
+            
+            proxyHeaders = headers.makeProxy(requestObject, routeObject);
+            proxyVariables = variables.makeProxy(requestObject, routeObject);
+            proxyBody = body.makeProxy(requestObject, routeObject, requestBody);
  
             switch (requestObject["headers"]["stcproxy"]) {
                 
                 case "mirror":
                 case "trace request":
                     
+                    response.writeHead(200, {"Content-Type": "text/plain"});
                     response.write('httpObject:\n');
                     response.write(JSON.stringify(requestObject));
                     response.write('\n');
                     
-                    if (httpBody) {
+                    if (requestBody) {
                         response.write('httpBody:\n');
-                        response.write(httpBody);
+                        response.write(requestBody);
                         response.write('\n');
                     }
                                       
                     break;
                 
                 case "trace route":
-                    
-                    if (routeObject) {
-                        response.writeHead(200, {"Content-Type": "text/json"});
-                        response.write(JSON.stringify(routeObject));
-                    } else {
-                        response.writeHead(404, {"Content-Type": "text/plain"});
-                        response.write("No route found");
-                    }
+
+                    response.writeHead(200, {"Content-Type": "text/json"});
+                    response.write(JSON.stringify(routeObject));
                     
                     break;
                 
                 case "trace headers":
                     
-                    if (routeObject) {
-                        response.writeHead(200, {"Content-Type": "text/json"});
-                        response.write(JSON.stringify(responseHeaders));
-                    } else {
-                        response.writeHead(404, {"Content-Type": "text/plain"});
-                        response.write("No route found");
-                    }
+                    response.writeHead(200, {"Content-Type": "text/json"});
+                    response.write(JSON.stringify(proxyHeaders));
                     
+                case "trace variables":
                     
+                    response.writeHead(200, {"Content-Type": "text/plain"});
+                    response.write(proxyVariables);                   
+                    
+                    break;
+                
+                case "trace body":
+                    
+                    response.writeHead(200, {"Content-Type": "text/plain"});
+                    response.write(proxyBody);                        
                     
                     break;
                 
                 default:
                     
-                    response.write("Not implemented");
+                    proxyResponse =  proxyRequest.proxyRequest(
+                                        requestObject,
+                                        routeObject,
+                                        proxyHeaders,
+                                        proxyVariables,
+                                        proxyBody);
+                   
+                    if (proxyResponse) {
+                        response.write(proxyResponse.asString);
+                    }
+                    
                                  
             }
-            
+            response.write('\n');
             response.end();
         });
     };
