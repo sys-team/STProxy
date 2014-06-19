@@ -1,21 +1,31 @@
-function makeProxy(
-    requestObject,
-    routeObject
+function makeBackend(
+    frontendRequestData,
+    route
 )
 {
-    var result = {};
-    var transHeaders = ["authorization","if-none-match"];
+    var result = {},
+        transHeaders = ["Authorization","if-none-match"];
     
     result["user-agent"] = "STProxy 0.1";
     
     transHeaders.forEach(function(value, ind, arr)
         {
-            if (requestObject["headers"][value]) {
-                result[value] = requestObject["headers"][value];
+            if (frontendRequestData["headers"][value.toLowerCase()]) {
+                result[value] = frontendRequestData["headers"][value.toLowerCase()];
             }
         });
+
+    return result;
+}
+
+function makeFrontend()
+{
+    var result = {};
+    
+    result ={"Content-Type": "text/plain"};
     
     return result;
 }
 
-exports.makeProxy = makeProxy;
+exports.makeBackend = makeBackend;
+exports.makeFrontend = makeFrontend;

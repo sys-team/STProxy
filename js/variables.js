@@ -1,15 +1,15 @@
-function makeProxy(
-    requestObject,
-    routeObject
+function makeBackend(
+    frontendRequestData,
+    route
 )
 {
-    var result = "";
+    var result = {};
     
-    Object.keys(requestObject["variables"]).forEach(function(key) {
-        result += (result == "" ? "" : "&") + key + "=" + requestObject["variables"][key];
+    Object.keys(frontendRequestData["variables"]).forEach(function(key) {
+        result[key] = frontendRequestData["variables"][key];
     });
     
     return result;
 }
 
-exports.makeProxy = makeProxy;
+exports.makeBackend = makeBackend;

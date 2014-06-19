@@ -1,19 +1,19 @@
 function route(
-    requestObject
+    frontendRequestData
 )
 {
     
     var result = {};
 
-    switch (requestObject["method"]) {
+    switch (frontendRequestData["method"]) {
         case "POST":
             
             result["language"] = "ASA.chest";
             result["url"] = 'https://asa0.unact.ru/chest';
             result["format"] = "xml";
-            result["encoding"] = "utf8";
+            result["encoding"] = "windows-1251";
             result["output-format"] = "json";
-            result["output-encoding"] = "windows-1251";
+            result["output-encoding"] = "utf8";
             result["method"] = "POST";
             
             break;
@@ -23,9 +23,9 @@ function route(
             result["language"] = "ASA.rest";
             result["url"] = 'https://asa0.unact.ru/arest/get';
             result["format"] = "xml";
-            result["encoding"] = "utf8";
+            result["encoding"] = "windows-1251";
             result["output-format"] = "json";
-            result["output-encoding"] = "windows-1251";
+            result["output-encoding"] = "utf8";
             result["method"] = "GET";
             
             break;

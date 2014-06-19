@@ -1,14 +1,12 @@
-var iconv  = require('./node_modules/iconv');
-
-function makeProxy(
-    requestObject,
-    routeObject,
-    httpBody
+function makeBackend(
+    frontendRequestData,
+    route,
+    frontendRequestBody
 )
 {
     var result = "";
     
-    if (routeObject["method"] == "GET") {
+    if (route["method"] == "GET") {
         result = undefined;   
     }
 
@@ -16,21 +14,7 @@ function makeProxy(
 
 }
 
-function translateResponse(
-)
-{
-    var conv = iconv.Iconv('windows-1251', 'utf8');
-    conv.convert(chunk).toString();
-    
-    var c = "./converters/asaRestXML2JSON";
-    var converter = require(c);
- 
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    str = converter.convert(str);
-
-    
-}
 
 
-exports.makeProxy = makeProxy;
-exports.translateResponse = translateResponse;
+
+exports.makeBackend = makeBackend;
