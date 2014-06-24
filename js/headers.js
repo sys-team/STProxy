@@ -18,11 +18,29 @@ function makeBackend(
     return result;
 }
 
-function makeFrontend()
+function makeFrontend(
+    route
+)
 {
     var result = {};
     
-    result ={"Content-Type": "text/plain"};
+    switch (route["output-format"]){
+        case "xml":
+            
+            result["Content-Type"]= "text/xml";
+            break;
+        
+        case "json":
+            
+            result["Content-Type"]= "application/json";
+            break;
+        
+        default:
+            
+            result["Content-Type"]= "text/plain";        
+    }
+    
+    
     
     return result;
 }

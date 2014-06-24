@@ -7,6 +7,7 @@ var variables = require("./variables");
 var body = require("./body");
 var irequest = require("./request");
 var translate = require("./translate");
+var check = require("./check");
 
 function start() {
   
@@ -49,12 +50,12 @@ function start() {
             backendRequestHeaders = headers.makeBackend(frontendRequestData, route);
             backendRequestVariables = variables.makeBackend(frontendRequestData, route);
             backendRequestBody = body.makeBackend(frontendRequestData, route, frontendRequestBody);
- 
+
             switch (frontendRequestData["headers"]["stcproxy"]) {
                 
                 case "mirror":
                 case "trace request":
-                    
+
                     response.writeHead(200, {"Content-Type": "text/plain"});
                     response.write("httpObject:\n");
                     response.write(JSON.stringify(frontendRequestData));
@@ -73,7 +74,7 @@ function start() {
                 
                 case "trace route":
 
-                    response.writeHead(200, {"Content-Type": "text/json"});
+                    response.writeHead(200, {"Content-Type": "application/json"});
                     response.write(JSON.stringify(route));
                     
                     response.write("\n");
@@ -83,7 +84,7 @@ function start() {
                 
                 case "trace headers":
                     
-                    response.writeHead(200, {"Content-Type": "text/json"});
+                    response.writeHead(200, {"Content-Type": "application/json"});
                     response.write(JSON.stringify(backendRequestHeaders));
                     
                     response.write("\n");
@@ -91,7 +92,7 @@ function start() {
                     
                 case "trace variables":
                     
-                    response.writeHead(200, {"Content-Type": "text/json"});
+                    response.writeHead(200, {"Content-Type": "application/json"});
                     response.write(JSON.stringify(backendRequestVariables));
 
                     response.write("\n");
@@ -123,18 +124,28 @@ function start() {
                             backendResponseBody)
                         {
                             if (backendResponseError) {
+                                
                                 response.writeHead(500, {"Content-Type": "text/plain"});
                                 response.write(backendResponseError.message);
                                 response.end();
-                                return;                                
+                                return;
+                            
                             }
                             
-                            frontendResponseStatus = status.makeFrontend();
-                            frontendResponseHeaders = headers.makeFrontend();
+                            if (!check.backendResponse(route, backendResponseBody)) {
+                                
+                                response.writeHead(500, {"Content-Type": "text/plain"});
+                                response.write("Invalid response from backend");
+                                response.end();
+                                return;
+                            
+                            }
+                            
                             frontendResponseBody = translate.backendResponse(route, backendResponseBody);
-
+                            frontendResponseStatus = status.makeFrontend(route, frontendResponseBody);
+                            frontendResponseHeaders = headers.makeFrontend(route);
                             response.writeHead(frontendResponseStatus, frontendResponseHeaders);
-                            response.write(frontendResponseBody);
+                            response.write(frontendResponseBody.toString());
                             
                             response.end();
                         });

@@ -18,6 +18,10 @@ function backend(
     options["method"] = route["method"];
     options["headers"] = backendRequestHeaders;
     options["qs"] = backendRequestVariables;
+    
+    if (backendRequestBody) {
+        options["body"] == backendRequestBody;
+    }
 
     request(options, function(error, response, body)
         {

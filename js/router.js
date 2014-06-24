@@ -9,7 +9,7 @@ function route(
         case "POST":
             
             result["language"] = "ASA.chest";
-            result["url"] = 'https://asa0.unact.ru/chest';
+            result["url"] = "https://asa0.unact.ru/chest";
             result["format"] = "xml";
             result["encoding"] = "windows-1251";
             result["output-format"] = "json";
@@ -21,7 +21,7 @@ function route(
         case "GET":
 
             result["language"] = "ASA.rest";
-            result["url"] = 'https://asa0.unact.ru/arest/get';
+            result["url"] = "https://asa0.unact.ru/arest/get";
             result["format"] = "xml";
             result["encoding"] = "windows-1251";
             result["output-format"] = "json";

@@ -6,11 +6,23 @@ function makeBackend(
 {
     var result = "";
     
-    if (route["method"] == "GET") {
-        result = undefined;   
+    switch (route["method"]) {
+        case "GET":
+            
+            result = undefined;
+            break;
+        
+        case "POST":
+            
+            result = frontendRequestBody;
+            break;
+        
+        default:
+            result = undefined;
     }
 
-   return result;
+    //console.log(result);
+    return result;
 
 }
 

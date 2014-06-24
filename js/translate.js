@@ -14,26 +14,29 @@ function backendResponse(
     if (route["encoding"] != route["output-encoding"]) {
         
         var buff = new Buffer(result.toString(), "binary");
-        var conv = iconv.Iconv(route["encoding"], route["output-encoding"].toString());
+        var conv = iconv.Iconv(route["encoding"], route["output-encoding"]);
         
         result = conv.convert(buff).toString();
     }
     
-    cName = converterName(route);
-
-    if (!fs.existsSync(cName)) {
-        result = 'No converter ' + cName + ' found';
-    } else {
-        var converter = require(cName);
-        result = converter.convert(result);
-        
+    if (route["format"] != route["output-format"]) {
+        cName = converterName(route, 0);
+    
+        if (!fs.existsSync(cName)) {
+            result = 'No converter ' + cName + ' found';
+        } else {
+            var converter = require(cName);
+            result = converter.convert(result);
+            
+        }
     }
 
     return result;    
 }
 
 function converterName(
-    route
+    route,
+    direction
 )
 {
     return  "./converters/"
