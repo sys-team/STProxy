@@ -38,7 +38,7 @@ function start() {
         request.on("end", function() {
     
             frontendRequestData = httpObject.parse(request);
-            route = router.route(frontendRequestData);
+            route = router.route(frontendRequestData, frontendRequestBody);
             
             if (!route) {
                 response.writeHead(404, {"Content-Type": "text/plain"});
@@ -134,6 +134,7 @@ function start() {
                             
                             if (!check.backendResponse(route, backendResponseBody)) {
                                 
+                                //console.log(backendResponseBody);
                                 response.writeHead(500, {"Content-Type": "text/plain"});
                                 response.write("Invalid response from backend");
                                 response.end();

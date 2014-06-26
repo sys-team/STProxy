@@ -14,13 +14,13 @@ function backend(
     options["strictSSL"] = false;
     options["encoding"] = "binary";
     
-    options["url"] =  route["url"] + frontendRequestData["url"];
+    options["url"] =  route["url"] + (frontendRequestData["url"] != "/" ? frontendRequestData["url"] : "");
     options["method"] = route["method"];
     options["headers"] = backendRequestHeaders;
     options["qs"] = backendRequestVariables;
     
     if (backendRequestBody) {
-        options["body"] == backendRequestBody;
+        options["body"] = backendRequestBody.toString();
     }
 
     request(options, function(error, response, body)

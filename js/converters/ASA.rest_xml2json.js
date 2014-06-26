@@ -39,32 +39,38 @@ function convert(
                 
                 row["name"] = obj["$"]["name"];
                 row["xid"] = obj["$"]["xid"];
-                row["properties"] = {};
-    
-                for (var prop in obj) {
-                    if (prop != "$"  && types.indexOf(prop == -1)) {
-                        types[j++] = prop;
-                    }
-                }
+                row["result"] = obj["_"];
                 
-                types.forEach(
-                    function(name){
-                        obj[name].forEach(
-                            function(prop){
-                                //console.log(prop);
-                                
-                                if (prop["$"]["parent"]) {
-                                    row[prop["$"]["name"]] = {};
-                                    row[prop["$"]["name"]]["name"] = prop["$"]["parent"];
-                                    row[prop["$"]["name"]]["xid"] = prop["$"]["parent-xid"];
-                                    row[prop["$"]["name"]]["id"] = prop["_"];
-                                } else {
-                                    row["properties"][prop["$"]["name"]] = prop["_"];
-                                }
-                            }
-                        )
+                if (typeof obj["_"] != 'string') {
+                    
+                    row["properties"] = {};
+    
+                    for (var prop in obj) {
+                        if (prop != "$"  && types.indexOf(prop == -1)) {
+                            types[j++] = prop;
+                        }
                     }
-                );
+
+                    types.forEach(
+                        function(name){
+                            obj[name].forEach(
+                                function(prop){
+                                    //console.log(prop);
+                                    
+                                    if (prop["$"]["parent"]) {
+                                        row[prop["$"]["name"]] = {};
+                                        row[prop["$"]["name"]]["name"] = prop["$"]["parent"];
+                                        row[prop["$"]["name"]]["xid"] = prop["$"]["parent-xid"];
+                                        row[prop["$"]["name"]]["id"] = prop["_"];
+                                    } else {
+                                        row["properties"][prop["$"]["name"]] = prop["_"];
+                                    }
+                                }
+                            )
+                        }
+                    );
+                    
+                }
                 
                 result["data"][i++] = row;   
             });

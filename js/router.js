@@ -1,5 +1,6 @@
 function route(
-    frontendRequestData
+    frontendRequestData,
+    frontendRequestBody
 )
 {
     
@@ -9,7 +10,12 @@ function route(
         case "POST":
             
             result["language"] = "ASA.chest";
-            result["url"] = "https://asa0.unact.ru/chest";
+            if (frontendRequestBody) {
+                result["url"] = "https://asa0.unact.ru/chest/chest";
+            } else {
+                result["url"] = "https://asa0.unact.ru/chest/settings";
+            }
+            //result["url"] = "http://op.unact.ru/op/echo";
             result["format"] = "xml";
             result["encoding"] = "windows-1251";
             result["output-format"] = "json";

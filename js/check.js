@@ -4,11 +4,12 @@ function backendResponse(
 )
 {
     
-    if (route["output-format"] == "json") {
+    //console.log(backendResponseBody);
+    
+    if (route["format"] == "json") {
         try {
-            parsed = JSON.parse(frontendResponseBody  );
+            parsed = JSON.parse(backendResponseBody);
         } catch (err) {
-            //console.log(err);
            return false;
         }
  
