@@ -17,7 +17,7 @@ function route(
             }
             //result["url"] = "http://op.unact.ru/op/echo";
             result["format"] = "xml";
-            result["encoding"] = "windows-1251";
+            result["encoding"] = "utf8";
             result["output-format"] = "json";
             result["output-encoding"] = "utf8";
             result["method"] = "POST";

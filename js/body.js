@@ -1,3 +1,5 @@
+var translate = require("./translate");
+
 function makeBackend(
     frontendRequestData,
     route,
@@ -14,7 +16,7 @@ function makeBackend(
         
         case "POST":
             
-            result = frontendRequestBody;
+            result = translate.frontendRequest(route, frontendRequestBody);
             break;
         
         default:
@@ -25,8 +27,6 @@ function makeBackend(
     return result;
 
 }
-
-
 
 
 exports.makeBackend = makeBackend;
