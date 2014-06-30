@@ -1,14 +1,18 @@
+var fs = require("fs");
+
 function readConfig(
     configName
 )
 {
-    var result = "";
-    
+
     if (!configName) {
-        configName = "./sampleConfig.json";
+        configName = "./STProxy.cfg.json";
     }
     
-    
-    
+    result =  fs.readFileSync(configName, "utf8");
+   
+    return result;   
     
 }
+
+exports.readConfig = readConfig;

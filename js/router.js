@@ -1,46 +1,66 @@
 function route(
     frontendRequestData,
-    frontendRequestBody
+    frontendRequestBody,
+    configObject
 )
 {
     
     var result = {};
-
-    switch (frontendRequestData["method"]) {
-        case "POST":
-            
-            result["language"] = "ASA.chest";
-            if (frontendRequestBody) {
-                result["url"] = "https://asa0.unact.ru/chest/chest";
-            } else {
-                result["url"] = "https://asa0.unact.ru/chest/settings";
+    var frontend = "";
+    var backend = "";
+    var routingMethod ="";
+    
+    Object.keys(configObject["frontend"]).forEach(function(key) {
+            if (frontendRequestData["url"].indexOf(configObject["frontend"][key]["url"]) == 0) {
+                
+                frontend = key;
+                return false;
             }
-            //result["url"] = "http://op.unact.ru/op/echo";
-            result["format"] = "xml";
-            result["encoding"] = "utf8";
-            result["output-format"] = "json";
-            result["output-encoding"] = "utf8";
-            result["method"] = "POST";
-            
-            break;
+            return true;
+        });
+    
+    
+    if (frontendRequestData["method"] == "POST"
+        || frontendRequestData["method"] == "PUT"
+        || frontendRequestData["method"] == "PATCH") {
         
-        case "GET":
-
-            result["language"] = "ASA.rest";
-            result["url"] = "https://asa0.unact.ru/arest/get";
-            result["format"] = "xml";
-            result["encoding"] = "windows-1251";
-            result["output-format"] = "json";
-            result["output-encoding"] = "utf8";
-            result["method"] = "GET";
-            
-            break;
-        
-        default:
-            
-            result = undefined;
-            
+        routingMethod = "POST";
     }
+    
+    if (frontendRequestData["method"] == "GET") {
+        
+        routingMethod = "GET";
+    }
+    
+    Object.keys(configObject["routing"]).forEach(function(key) {
+        
+            if (configObject["routing"][key]["from"] == frontend
+               && configObject["routing"][key]["method"] == routingMethod){
+                
+                backend = configObject["routing"][key]["to"];
+                return false;
+            }
+            return true;
+        });
+        
+    Object.keys(configObject["backend"]).forEach(function(key) {
+            
+            if (key == backend ) {
+                
+                result["language"] = configObject["backend"][key]["language"];
+                result["format"] = configObject["backend"][key]["format"];
+                result["url"] = configObject["backend"][key]["url"];
+                result["encoding"] = configObject["backend"][key]["charset"];
+                result["method"] = configObject["backend"][key]["method"];
+                
+                return false;
+            }
+            return true;
+        });
+    
+    result["output-format"] = "json";
+    result["output-encoding"] = "utf8";
+    
     
     return result;
 

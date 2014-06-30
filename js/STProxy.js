@@ -1,4 +1,5 @@
 var http = require("http");
+var config = require("./config");
 var httpObject = require("./httpObject");
 var router = require("./router");
 var status = require("./status");
@@ -38,7 +39,9 @@ function start() {
         request.on("end", function() {
     
             frontendRequestData = httpObject.parse(request);
-            route = router.route(frontendRequestData, frontendRequestBody);
+            route = router.route(frontendRequestData,
+                                 frontendRequestBody,
+                                 configObject);
             
             if (!route) {
                 response.writeHead(404, {"Content-Type": "text/plain"});
@@ -47,7 +50,7 @@ function start() {
                 return;
             }
 
-            backendRequestHeaders = headers.makeBackend(frontendRequestData, route);
+            backendRequestHeaders = headers.makeBackend(route, frontendRequestData);
             backendRequestVariables = variables.makeBackend(frontendRequestData, route);
             backendRequestBody = body.makeBackend(frontendRequestData, route, frontendRequestBody);
 
@@ -146,6 +149,7 @@ function start() {
                             frontendResponseStatus = status.makeFrontend(route, frontendResponseBody);
                             frontendResponseHeaders = headers.makeFrontend(route, frontendResponseBody);
                             response.writeHead(frontendResponseStatus, frontendResponseHeaders);
+                            
                             response.write(frontendResponseBody.toString());
                             
                             response.end();
@@ -154,8 +158,11 @@ function start() {
             }
         });
     };
-
-    http.createServer(onRequest).listen(8888);
+    
+    var configObject = {};
+    configObject = JSON.parse(config.readConfig());
+    
+    http.createServer(onRequest).listen(configObject["service"]["port"]);
 };
 
 exports.start = start;

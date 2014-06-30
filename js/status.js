@@ -11,7 +11,7 @@ function makeFrontend(
     if (route["output-format"] == "json") {
         if (parsed["error"] == "Not authenticated") {
             result = 401;
-        } else if (parsed["pageRowCount"] == "0" && route["method"] == "GET" ) {
+        } else if (parsed["page-row-count"] == "0" && route["method"] == "GET" ) {
             result = 204;
         }
     }

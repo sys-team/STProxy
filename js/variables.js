@@ -6,7 +6,7 @@ function makeBackend(
     var result = {};
     
     Object.keys(frontendRequestData["variables"]).forEach(function(key) {
-        result[key] = frontendRequestData["variables"][key];
+        result[key.toLowerCase()] = frontendRequestData["variables"][key];
     });
     
     return result;

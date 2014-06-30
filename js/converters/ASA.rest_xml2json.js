@@ -14,12 +14,11 @@ function convert(
         function(err, res){
             json = res;
             //console.log(res);                 
-        });   
+        });
     
-    result["ts"] = json["response"]["$"]["ts"];
-    result["pageSize"] = json["response"]["$"]["page-size"];
-    result["pageNumber"] = json["response"]["$"]["page-number"];
-    result["pageRowCount"] = json["response"]["$"]["page-row-count"];
+    Object.keys(json["response"]["$"]).forEach(function(key){
+        result[key] = json["response"]["$"][key];  
+    });  
     
     if (json["response"]["error"]) {
         result["error"] = json["response"]["error"][0];

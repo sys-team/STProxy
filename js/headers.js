@@ -1,11 +1,14 @@
 function makeBackend(
-    frontendRequestData,
-    route
+    route,
+    frontendRequestData
 )
 {
     var result = {},
-        transHeaders = ["Authorization","if-none-match"];
-    
+        transHeaders = ["Authorization",
+                        "if-none-match",
+                        "if-modified-since",
+                        "Page-size"];
+        
     result["user-agent"] = "STProxy 0.1";
     
     transHeaders.forEach(function(value, ind, arr)
@@ -14,16 +17,24 @@ function makeBackend(
                 result[value] = frontendRequestData["headers"][value.toLowerCase()];
             }
         });
+    
+    Object.keys(frontendRequestData["headers"]).forEach(function(key)
+        {                                                
+            if (key.toLowerCase().indexOf("backend-") == 0) {
+                result[key.toLowerCase().replace("backend-", "")] = frontendRequestData["headers"][key.toLowerCase()];
+            }
+        });
 
     return result;
 }
 
 function makeFrontend(
-    
-    route
+    route,
+    frontendResponseBody
 )
 {
     var result = {};
+    var parsed = {};
     
     switch (route["output-format"]){
         case "xml":
@@ -41,6 +52,13 @@ function makeFrontend(
             result["Content-Type"]= "text/plain";        
     }
     
+    parsed = JSON.parse(frontendResponseBody);
+    Object.keys(parsed).forEach(function(key)
+        {
+            if (key != "data") {
+                result[key.toLowerCase()] = parsed[key].toString();
+            };
+        });
     
     
     return result;
