@@ -144,7 +144,7 @@ function start() {
                             
                             frontendResponseBody = translate.backendResponse(route, backendResponseBody);
                             frontendResponseStatus = status.makeFrontend(route, frontendResponseBody);
-                            frontendResponseHeaders = headers.makeFrontend(route);
+                            frontendResponseHeaders = headers.makeFrontend(route, frontendResponseBody);
                             response.writeHead(frontendResponseStatus, frontendResponseHeaders);
                             response.write(frontendResponseBody.toString());
                             
