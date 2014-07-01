@@ -17,7 +17,7 @@ function convert(
     result = xmlBuilder.create("post");
     
     json["data"].forEach(function(obj){
-        var record = result.ele("d");
+        var record = result.ele((options["isPatch"] ? "m" : "d"));
         
         record.att("name", obj["name"]);
         record.att("xid", obj["xid"]);

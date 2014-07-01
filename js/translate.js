@@ -38,7 +38,8 @@ function backendResponse(
 ////////////
 function frontendRequest(
     route,
-    frontendRequestBody
+    frontendRequestBody,
+    frontendRequestData
 )
 {
     var result = "";
@@ -50,6 +51,14 @@ function frontendRequest(
     //console.log(route["output-encoding"],["encoding"]);
 
     if (route["format"] != route["output-format"]) {
+        
+        if (route["language"] == "ASA.chest"
+         && frontendRequestData["method"] == "PATCH") {
+            
+            options["isPatch"] = true;
+            
+        }
+        
         cName = converterName(route, 1);
     
         if (!fs.existsSync(cName)) {

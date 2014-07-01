@@ -16,7 +16,7 @@ function makeBackend(
         
         case "POST":
             
-            result = translate.frontendRequest(route, frontendRequestBody);
+            result = translate.frontendRequest(route, frontendRequestBody, frontendRequestData);
             break;
         
         default:
