@@ -30,6 +30,7 @@ function makeBackend(
 
 function makeFrontend(
     route,
+    frontendRequestData,
     frontendResponseBody
 )
 {
@@ -50,6 +51,11 @@ function makeFrontend(
         default:
             
             result["Content-Type"]= "text/plain";        
+    }
+    
+    if (frontendRequestData["method"] == "HEAD") {
+        result["content-length"] = "0";
+        result["connection"] = "close";
     }
     
     parsed = JSON.parse(frontendResponseBody);

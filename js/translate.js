@@ -43,9 +43,12 @@ function frontendRequest(
 {
     var result = "";
     var cName = "";
+    var options = {};
     
     result = frontendRequestBody;
     
+    //console.log(route["output-encoding"],["encoding"]);
+
     if (route["format"] != route["output-format"]) {
         cName = converterName(route, 1);
     
@@ -53,7 +56,7 @@ function frontendRequest(
             result = 'No converter ' + cName + ' found';
         } else {
             var converter = require(cName);
-            result = converter.convert(result);
+            result = converter.convert(result, options);
             
         }
     }
@@ -66,6 +69,8 @@ function frontendRequest(
         result = conv.convert(buff).toString();
     }
     
+    
+
     return result;    
 }
 

@@ -1,7 +1,8 @@
 var xml2js  = require('../node_modules/xml2js');
 
 function convert(
-    xml
+    xml,
+    options
 )
 {
     var i = 0;

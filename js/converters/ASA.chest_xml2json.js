@@ -1,10 +1,11 @@
 var converter  = require('./ASA.rest_xml2json');
 
 function convert(
-    xml
+    xml,
+    options
 )
 {
-    return converter.convert(xml);
+    return converter.convert(xml, options);
 }
 
 exports.convert = convert;

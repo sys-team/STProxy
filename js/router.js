@@ -11,9 +11,12 @@ function route(
     var routingMethod ="";
     
     Object.keys(configObject["frontend"]).forEach(function(key) {
+        
             if (frontendRequestData["url"].indexOf(configObject["frontend"][key]["url"]) == 0) {
                 
+                result["frontendUrl"] = configObject["frontend"][key]["url"];
                 frontend = key;
+                result["output-encoding"] = configObject["frontend"][key]["charset"];
                 return false;
             }
             return true;
@@ -21,13 +24,14 @@ function route(
     
     
     if (frontendRequestData["method"] == "POST"
-        || frontendRequestData["method"] == "PUT"
-        || frontendRequestData["method"] == "PATCH") {
+     || frontendRequestData["method"] == "PUT"
+     || frontendRequestData["method"] == "PATCH") {
         
         routingMethod = "POST";
     }
     
-    if (frontendRequestData["method"] == "GET") {
+    if (frontendRequestData["method"] == "GET"
+     || frontendRequestData["method"] == "HEAD") {
         
         routingMethod = "GET";
     }
@@ -35,7 +39,7 @@ function route(
     Object.keys(configObject["routing"]).forEach(function(key) {
         
             if (configObject["routing"][key]["from"] == frontend
-               && configObject["routing"][key]["method"] == routingMethod){
+             && configObject["routing"][key]["method"] == routingMethod){
                 
                 backend = configObject["routing"][key]["to"];
                 return false;
@@ -59,11 +63,13 @@ function route(
         });
     
     result["output-format"] = "json";
-    result["output-encoding"] = "utf8";
     
+    if (result["language"]) {
+        return result;
+    } else {
+        return undefined;
+    }
     
-    return result;
-
 }
 
 

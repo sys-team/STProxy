@@ -1,11 +1,16 @@
 var xmlBuilder  = require('../node_modules/xmlbuilder');
 
 function convert(
-    jsonString
+    jsonString,
+    options
 )
 {
     var result;
     var json;
+    
+    if (!jsonString) {
+        return "";
+    }
 
     json = JSON.parse(jsonString);
     

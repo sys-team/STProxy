@@ -14,7 +14,8 @@ function backend(
     options["strictSSL"] = false;
     options["encoding"] = "binary";
     
-    options["url"] =  route["url"] + (frontendRequestData["url"] != "/" ? frontendRequestData["url"] : "");
+    options["url"] =  route["url"] + (frontendRequestData["url"] != "/" ?
+                                      "/" + frontendRequestData["url"].replace(route["frontendUrl"], "") : "");
     options["method"] = route["method"];
     options["headers"] = backendRequestHeaders;
     options["qs"] = backendRequestVariables;
