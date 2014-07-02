@@ -22,7 +22,14 @@ function convert(
     });  
     
     if (json["response"]["error"]) {
-        result["error"] = json["response"]["error"][0];
+        
+        if (options) {
+            if (options["isChest"]) {
+                result["error"] = json["response"]["error"][0]["$"]["code"];
+            }
+        } else {
+            result["error"] = json["response"]["error"][0];
+        }
     }
     
     result["data"] = [];

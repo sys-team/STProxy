@@ -5,7 +5,11 @@ function convert(
     options
 )
 {
-    return converter.convert(xml, options);
+    var coptions = {};
+    
+    coptions["isChest"] = true;
+    
+    return converter.convert(xml, coptions);
 }
 
 exports.convert = convert;
