@@ -12,6 +12,9 @@ function backendResponse(
     var options = {};
     
     result = backendResponseBody;
+    
+    //console.log(backendResponseBody);
+
 
     if (route["encoding"] != route["output-encoding"]) {
         
@@ -19,6 +22,9 @@ function backendResponse(
         var conv = iconv.Iconv(route["encoding"], route["output-encoding"]);
         
         result = conv.convert(buff).toString();
+    } else {
+        var buff = new Buffer(result.toString(), "binary");
+        result = buff.toString();
     }
     
     if (route["format"] != route["output-format"]) {
