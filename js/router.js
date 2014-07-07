@@ -23,6 +23,8 @@ function route(
         });
     
     
+    //console.log(frontend);
+    
     if (frontendRequestData["method"] == "POST"
      || frontendRequestData["method"] == "PUT"
      || frontendRequestData["method"] == "PATCH") {
@@ -46,6 +48,8 @@ function route(
             }
             return true;
         });
+    
+    //console.log(backend);
         
     Object.keys(configObject["backend"]).forEach(function(key) {
             

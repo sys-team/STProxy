@@ -164,11 +164,7 @@ function start() {
             }
         });
     };
-    /*
-    process.on('uncaughtException', function(err) {
-        console.log('Caught exception: ' + err);
-    });*/
-    
+
     var domain = require("domain").create();
     var configObject = {};
      
