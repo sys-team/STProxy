@@ -9,6 +9,7 @@ function backendResponse(
 {
     var result = "";
     var cName = "";
+    var options = {};
     
     result = backendResponseBody;
 
@@ -26,9 +27,12 @@ function backendResponse(
         if (!fs.existsSync(cName)) {
             result = 'No converter ' + cName + ' found';
         } else {
-            var converter = require(cName);
-            result = converter.convert(result);
-            
+            try {
+                var converter = require(cName);
+                result = converter.convert(result, options);
+            } catch(e) {
+                console.log(e);
+            }
         }
     }
 
@@ -64,8 +68,12 @@ function frontendRequest(
         if (!fs.existsSync(cName)) {
             result = 'No converter ' + cName + ' found';
         } else {
-            var converter = require(cName);
-            result = converter.convert(result, options);
+            try {
+                var converter = require(cName);
+                result = converter.convert(result, options);
+            } catch(e) {
+                console.log(e);
+            }
             
         }
     }

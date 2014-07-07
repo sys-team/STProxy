@@ -164,11 +164,25 @@ function start() {
             }
         });
     };
+    /*
+    process.on('uncaughtException', function(err) {
+        console.log('Caught exception: ' + err);
+    });*/
     
+    var domain = require("domain").create();
     var configObject = {};
-    configObject = JSON.parse(config.readConfig());
-    
-    http.createServer(onRequest).listen(configObject["service"]["port"]);
+     
+    domain.on("error", function(err){
+        console.log(err);
+    });
+     
+    domain.run(function(){
+       
+        configObject = JSON.parse(config.readConfig());
+        http.createServer(onRequest).listen(configObject["service"]["port"]);
+
+    });
+
 };
 
 exports.start = start;
