@@ -14,6 +14,7 @@ function route(
         
             if (frontendRequestData["url"].indexOf(configObject["frontend"][key]["url"]) == 0) {
                 
+                result["frontend"] = key;
                 result["frontendUrl"] = configObject["frontend"][key]["url"];
                 frontend = key;
                 result["output-encoding"] = configObject["frontend"][key]["charset"];

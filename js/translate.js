@@ -103,15 +103,22 @@ function converterName(
     direction
 )
 {
+    //if (direction == 0) {
+    //    return  "./converters/"
+    //            + route["language"] + "_" + route["format"] + "2" + route["output-format"]
+    //            + ".js";
+    //} else {
+    //    return  "./converters/"
+    //            + route["language"] + "_" + route["output-format"] + "2" + route["format"]
+    //            + ".js";        
+    //}
+    
     if (direction == 0) {
-        return  "./converters/"
-                + route["language"] + "_" + route["format"] + "2" + route["output-format"]
-                + ".js";
+        return "./converters/" + "b_" + route["language"] + "_2_f_" + route["frontend"] + ".js";
     } else {
-        return  "./converters/"
-                + route["language"] + "_" + route["output-format"] + "2" + route["format"]
-                + ".js";        
+        return "./converters/" + "f_" + route["frontend"] + "_2_b_" + route["language"] + ".js";
     }
+    
 }
 
 ////////////

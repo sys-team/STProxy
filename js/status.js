@@ -6,7 +6,9 @@ function makeFrontend(
     var result = 200;
     var parsed = {};
     
-    parsed = JSON.parse(frontendResponseBody);
+    //console.log(frontendResponseBody);
+    parsed = JSON.parse(frontendResponseBody)
+
 
     if (route["output-format"] == "json") {
         if (parsed["error"] == "Not authenticated"
