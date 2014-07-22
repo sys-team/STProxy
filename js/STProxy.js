@@ -112,6 +112,16 @@ function start() {
                     response.end();
                     
                     break;
+            
+                case "trace config":
+                    
+                    response.writeHead(200, {"Content-Type": "application/json"});
+                    response.write(JSON.stringify(configObject));
+                
+                    response.write("\n");
+                    response.end();
+                    
+                    break;
                 
                 default:
                     
@@ -175,6 +185,12 @@ function start() {
     domain.run(function(){
        
         configObject = JSON.parse(config.readConfig());
+        
+        if (!configObject) {
+            console.log("Incorrect JSON in config file(s)");
+            return;
+        }
+        
         http.createServer(onRequest).listen(configObject["service"]["port"]);
 
     });

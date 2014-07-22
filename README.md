@@ -1,7 +1,5 @@
 Dependencies
 ===========
-npm install extend
-
 npm install iconv
 
 npm install request

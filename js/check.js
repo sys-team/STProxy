@@ -10,7 +10,7 @@ function backendResponse(
         try {
             parsed = JSON.parse(backendResponseBody);
         } catch (err) {
-           return false;
+            return false;
         }
  
     }

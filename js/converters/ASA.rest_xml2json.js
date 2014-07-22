@@ -13,20 +13,18 @@ function convert(
     
     parser.parseString(xml,
         function(err, res){
-            json = res;
-            //console.log(res);                 
+            json = res;           
         });
     
     Object.keys(json["response"]["$"]).forEach(function(key){
         result[key] = json["response"]["$"][key];  
-    });  
+    });
+    
     
     if (json["response"]["error"]) {
         
-        if (options) {
-            if (options["isChest"]) {
-                result["error"] = json["response"]["error"][0]["$"]["code"];
-            }
+        if (options["isChest"]) {
+            result["error"] = json["response"]["error"][0]["$"]["code"];
         } else {
             result["error"] = json["response"]["error"][0];
         }

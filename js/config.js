@@ -1,5 +1,5 @@
 var fs = require("fs");
-var extend = require("./node_modules/extend");
+var deepmerge = require("./STDeepMerge");
 
 function readConfig(
     configDir,
@@ -23,9 +23,17 @@ function readConfig(
         if (file.toLowerCase().indexOf("stproxy.json") != -1) {
             
             str = fs.readFileSync(configDir + file, "utf8");
-            var parsed = JSON.parse(str);
             
-            extend(true, result, parsed );
+            try {
+                var parsed = JSON.parse(str);
+            } catch (err) {
+                console.log("config error");
+                result = undefined;
+                return false;
+            }
+            
+            var r = deepmerge(result, parsed);
+            result = r;
             
         }
     });
