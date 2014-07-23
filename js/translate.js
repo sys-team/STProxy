@@ -1,5 +1,5 @@
 var fs = require("fs");
-var iconv  = require('./node_modules/iconv');
+var iconv  = require("iconv");
 
 ////////////
 function backendResponse(
@@ -31,7 +31,8 @@ function backendResponse(
         cName = converterName(route, 0);
     
         if (!fs.existsSync(cName)) {
-            result = 'No converter ' + cName + ' found';
+            console.log('No converter ' + cName + ' found');
+            return undefined;
         } else {
             try {
                 var converter = require(cName);
@@ -72,7 +73,8 @@ function frontendRequest(
         cName = converterName(route, 1);
     
         if (!fs.existsSync(cName)) {
-            result = 'No converter ' + cName + ' found';
+            console.log('No converter ' + cName + ' found');
+            return undefined;
         } else {
             try {
                 var converter = require(cName);

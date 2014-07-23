@@ -156,6 +156,17 @@ function start() {
                             }
                             
                             frontendResponseBody = translate.backendResponse(route, backendResponseBody);
+                            
+                            if (!check.frontendResponse(route, frontendResponseBody)) {
+                                
+                                //console.log(frontendResponseBody);
+                                response.writeHead(500, {"Content-Type": "text/plain"});
+                                response.write("Invalid response to frontend");
+                                response.end();
+                                return;
+                            
+                            }
+                            
                             frontendResponseStatus = status.makeFrontend(route, frontendResponseBody);
                             frontendResponseHeaders = headers.makeFrontend(route,
                                                                            frontendRequestData,

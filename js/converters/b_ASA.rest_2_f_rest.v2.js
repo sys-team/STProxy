@@ -5,7 +5,6 @@ function convert(
     options
 )
 {
-    var i = 0;
     var json;
     var result = {};
     var str = "";
@@ -20,7 +19,6 @@ function convert(
         result[key] = json["response"]["$"][key];  
     });
     
-    
     if (json["response"]["error"]) {
         
         if (options["isChest"]) {
@@ -30,7 +28,7 @@ function convert(
         }
     }
     
-    result["data"] = [];
+    result["data"] = {};
     
     if (json["response"]["d"]) {
         
@@ -38,50 +36,50 @@ function convert(
             function(obj){
                 var row = {};
                 var types = [];
-                var j = 0;
-                
+
                 //console.log(obj);
                 
-                row["name"] = obj["$"]["name"];
-                row["xid"] = obj["$"]["xid"];
-                row["result"] = obj["_"];
+                if (!result["data"][obj["$"]["name"]]) {
+                    result["data"][obj["$"]["name"]] = [];
+                }
                 
                 if (typeof obj["_"] != "string") {
-                    
-                    row["properties"] = {};
-    
+                
                     for (var prop in obj) {
                         if (prop != "$"  && types.indexOf(prop == -1)) {
-                            types[j++] = prop;
+                            types.push(prop);
                         }
                     }
-
+                    
+                    row["xid"] = obj["$"]["xid"];
+                
                     types.forEach(
                         function(name){
                             obj[name].forEach(
                                 function(prop){
                                     //console.log(prop);
-                                    
                                     if (prop["$"]["parent"]) {
-                                        row[prop["$"]["name"]] = {};
-                                        row[prop["$"]["name"]]["name"] = prop["$"]["parent"];
-                                        row[prop["$"]["name"]]["xid"] = prop["$"]["parent-xid"];
-                                        row[prop["$"]["name"]]["id"] = prop["_"];
+                                        row[prop["$"]["name"]] = prop["$"]["parent-xid"];;
                                     } else {
-                                        row["properties"][prop["$"]["name"]] = prop["_"];
+                                        row[prop["$"]["name"]] = prop["_"];
                                     }
                                 }
                             )
                         }
                     );
-                    
+                
+                } else {
+                    row[obj["$"]["xid"]] = obj["_"];
+
+                    console.log(obj);
                 }
                 
-                result["data"][i++] = row;   
+                result["data"][obj["$"]["name"]].push(row);
+                
             });
-        
-    }   
-    //console.log(result);
+
+    }
+    
     
     str = JSON.stringify(result); 
 

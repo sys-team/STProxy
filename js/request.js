@@ -1,4 +1,4 @@
-var request  = require("./node_modules/request");
+var request  = require("request");
 
 function backend(
     route,

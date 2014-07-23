@@ -14,6 +14,8 @@ function makeFrontend(
         if (parsed["error"] == "Not authenticated"
          || parsed["error"] == "NotAuthorized") {
             result = 401;
+        } else if (parsed["error"]) {
+            result = 500;
         } else if (parsed["page-row-count"] == "0" && route["method"] == "GET" ) {
             result = 204;
         }

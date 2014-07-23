@@ -1,4 +1,4 @@
-var xmlBuilder  = require('../node_modules/xmlbuilder');
+var xmlBuilder  = require("xmlbuilder");
 
 function convert(
     jsonString,
