@@ -71,7 +71,7 @@ function convert(
                 } else {
                     row[obj["$"]["xid"]] = obj["_"];
 
-                    console.log(obj);
+                    //console.log(obj);
                 }
                 
                 result["data"][obj["$"]["name"]].push(row);

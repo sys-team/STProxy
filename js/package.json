@@ -1,0 +1,16 @@
+{
+    "name": "STProxy",
+    "description": "Proxy for ASA.rest, ASA.chest and UOAuht services",
+    "keywords": [
+        "ASA.rest",
+        "ASA.chest",
+        "UOAuth"
+    ],
+    "version": "0.0.1",
+    "dependencies": {
+        "iconv": ">=2.1.4",
+        "request": ">=2.36.0",
+        "xml2js": ">=0.4.4",
+        "xmlbuilder": ">=2.2.1"
+    }
+}
