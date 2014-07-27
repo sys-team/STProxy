@@ -39,9 +39,11 @@ function start() {
         request.on("end", function() {
     
             frontendRequestData = httpObject.parse(request);
-            route = router.route(frontendRequestData,
-                                 frontendRequestBody,
-                                 configObject);
+            route = router.route(
+                frontendRequestData,
+                frontendRequestBody,
+                configObject
+            );
             
             if (!route) {
                 response.writeHead(404, {"Content-Type": "text/plain"});
