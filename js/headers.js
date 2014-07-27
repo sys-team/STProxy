@@ -59,13 +59,12 @@ function makeFrontend(
     }
     
     parsed = JSON.parse(frontendResponseBody);
-    Object.keys(parsed).forEach(function(key)
-        {
-            if (key != "data") {
-                result[key.toLowerCase()] = parsed[key].toString();
-            };
-        });
     
+    Object.keys(parsed).forEach(function(key){
+        if (key != 'data') {
+            result[key.toLowerCase()] = parsed[key].toString();
+        };
+    });
     
     return result;
 }
