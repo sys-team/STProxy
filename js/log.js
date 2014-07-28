@@ -1,11 +1,11 @@
-function request(
+function writeAboutRequest(
     requestData,
     route,
     status
 ){
 
     console.log('%s %s %s %s %s %s %s %s',
-        new Date().toString(),
+        new Date().toISOString().replace('T', ' ').replace('Z', ''),
         requestData['client-ip'].toString(),
         (route ? route['frontend'] : 'Undefined'),
         requestData['method'],
@@ -16,5 +16,5 @@ function request(
     )
 }
 
-exports.request = request;
+exports.writeAboutRequest = writeAboutRequest;
 

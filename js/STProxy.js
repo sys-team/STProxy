@@ -52,7 +52,7 @@ function start() {
                 response.writeHead(404, {'Content-Type': 'text/plain'});
                 response.write('No route found');
                 response.end();
-                log.request(frontendRequestData, route, 404);
+                log.writeAboutRequest(frontendRequestData, route, 404);
                 return;
             }
 
@@ -79,7 +79,7 @@ function start() {
                     response.write('\n');
                     response.end();
                     
-                    log.request(frontendRequestData, route, 200);
+                    log.writeAboutRequest(frontendRequestData, route, 200);
                                       
                     break;
                 
@@ -91,7 +91,7 @@ function start() {
                     response.write('\n');
                     response.end();
                     
-                    log.request(frontendRequestData, route, 200);
+                    log.writeAboutRequest(frontendRequestData, route, 200);
                     
                     break;
                 
@@ -103,7 +103,7 @@ function start() {
                     response.write('\n');
                     response.end();
                     
-                    log.request(frontendRequestData, route, 200);
+                    log.writeAboutRequest(frontendRequestData, route, 200);
                     
                     break;                    
                     
@@ -115,7 +115,7 @@ function start() {
                     response.write('\n');
                     response.end();
                     
-                    log.request(frontendRequestData, route, 200);
+                    log.writeAboutRequest(frontendRequestData, route, 200);
                     
                     break;
                 
@@ -127,7 +127,7 @@ function start() {
                     response.write('\n');
                     response.end();
                     
-                    log.request(frontendRequestData, route, 200);
+                    log.writeAboutRequest(frontendRequestData, route, 200);
                     
                     break;
             
@@ -139,7 +139,7 @@ function start() {
                     response.write('\n');
                     response.end();
                     
-                    log.request(frontendRequestData, route, 200);
+                    log.writeAboutRequest(frontendRequestData, route, 200);
                     
                     break;
                 
@@ -162,7 +162,7 @@ function start() {
                                 response.write(backendResponseError.message);
                                 response.end();
                                 
-                                log.request(frontendRequestData, route, 500);
+                                log.writeAboutRequest(frontendRequestData, route, 500);
                                 
                                 return;
                             
@@ -175,7 +175,7 @@ function start() {
                                 response.write('Invalid response from backend');
                                 response.end();
                                 
-                                log.request(frontendRequestData, route, 500);
+                                log.writeAboutRequest(frontendRequestData, route, 500);
                                 
                                 return;
                             
@@ -190,7 +190,7 @@ function start() {
                                 response.write('Invalid response to frontend');
                                 response.end();
                                 
-                                log.request(frontendRequestData, route, 500);
+                                log.writeAboutRequest(frontendRequestData, route, 500);
                                 
                                 return;
                             
@@ -210,7 +210,7 @@ function start() {
                             
                             response.end();
                             
-                            log.request(frontendRequestData, route, frontendResponseStatus);
+                            log.writeAboutRequest(frontendRequestData, route, frontendResponseStatus);
                         });
                   
             }
