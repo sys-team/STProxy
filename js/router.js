@@ -20,6 +20,10 @@ function route(
                 result['frontendLanguage'] = configObject['frontend'][key]['language'];
                 result['output-encoding'] = configObject['frontend'][key]['charset'];
                 
+                if (result['frontendUrl'][result['frontendUrl'].length -1] != '/') {
+                    result['frontendUrl'] = result['frontendUrl'] +'/';
+                }
+                
                 return false;
             }
             return true;

@@ -15,7 +15,9 @@ function backend(
     options['encoding'] = 'binary';
     
     options['url'] =  route['url'] + (frontendRequestData['url'] != '/' ?
-                                      '/' + frontendRequestData['url'].replace(route['frontendUrl'], '') : '');
+                      '/' + frontendRequestData['url'].replace(route['frontendUrl'], '') : '');
+    
+
     options['method'] = route['method'];
     options['headers'] = backendRequestHeaders;
     options['qs'] = backendRequestVariables;
