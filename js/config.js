@@ -1,5 +1,5 @@
-var fs = require("fs");
-var deepmerge = require("./STDeepMerge");
+var fs = require('fs');
+var deepmerge = require('./STDeepMerge');
 
 function readConfig(
     configDir,
@@ -7,27 +7,27 @@ function readConfig(
 )
 {
     var result = {};
-    var str = "";
+    var str = '';
 
     if (!configName) {
-        configName = "*.stproxy.json";
+        configName = '*.stproxy.json';
     }
     
     if (!configDir) {
-        configDir = "../config/";
+        configDir = '../config/';
     }
     
     files = fs.readdirSync(configDir);
     
     files.forEach(function(file){
-        if (file.toLowerCase().indexOf("stproxy.json") != -1) {
+        if (file.toLowerCase().indexOf('stproxy.json') != -1) {
             
-            str = fs.readFileSync(configDir + file, "utf8");
+            str = fs.readFileSync(configDir + file, 'utf8');
             
             try {
                 var parsed = JSON.parse(str);
             } catch (err) {
-                console.log("config error");
+                console.log('config error');
                 result = undefined;
                 return false;
             }

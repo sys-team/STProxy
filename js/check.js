@@ -6,7 +6,7 @@ function backendResponse(
     
     //console.log(backendResponseBody);
     
-    if (route["format"] == "json") {
+    if (route['format'] == 'json') {
         try {
             parsed = JSON.parse(backendResponseBody);
         } catch (err) {
@@ -26,7 +26,7 @@ function frontendResponse(
     
     //console.log(backendResponseBody);
     
-    if (route["output-format"] == "json") {
+    if (route['output-format'] == 'json') {
         try {
             parsed = JSON.parse(frontendResponseBody);
         } catch (err) {

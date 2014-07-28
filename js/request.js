@@ -1,4 +1,4 @@
-var request  = require("request");
+var request  = require('request');
 
 function backend(
     route,
@@ -11,17 +11,17 @@ function backend(
 {
     var options = {};
     
-    options["strictSSL"] = false;
-    options["encoding"] = "binary";
+    options['strictSSL'] = false;
+    options['encoding'] = 'binary';
     
-    options["url"] =  route["url"] + (frontendRequestData["url"] != "/" ?
-                                      "/" + frontendRequestData["url"].replace(route["frontendUrl"], "") : "");
-    options["method"] = route["method"];
-    options["headers"] = backendRequestHeaders;
-    options["qs"] = backendRequestVariables;
+    options['url'] =  route['url'] + (frontendRequestData['url'] != '/' ?
+                                      '/' + frontendRequestData['url'].replace(route['frontendUrl'], '') : '');
+    options['method'] = route['method'];
+    options['headers'] = backendRequestHeaders;
+    options['qs'] = backendRequestVariables;
     
     if (backendRequestBody) {
-        options["body"] = backendRequestBody.toString();
+        options['body'] = backendRequestBody.toString();
     }
 
     request(options, function(error, response, body)

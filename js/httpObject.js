@@ -4,14 +4,15 @@ function parse(
 {
     var result = {};
     
-    result["method"] = request.method;
-    result["headers"] = request.headers;
+    result['method'] = request.method;
+    result['headers'] = request.headers;
+    result['client-ip'] = request.connection.remoteAddress;
     
-    parsedUrl = require("url").parse(request.url, true);
+    parsedUrl = require('url').parse(request.url, true);
     
-    result["variables"] = parsedUrl.query;
-    result["url"] = parsedUrl.pathname;
-    result["url-parts"] = parsedUrl.pathname.substring(1).split('/');
+    result['variables'] = parsedUrl.query;
+    result['url'] = parsedUrl.pathname;
+    result['url-parts'] = parsedUrl.pathname.substring(1).split('/');
     
     return result;
 }

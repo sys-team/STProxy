@@ -1,4 +1,4 @@
-var xml2js  = require("xml2js");
+var xml2js  = require('xml2js');
 
 function convert(
     xml,
@@ -8,7 +8,7 @@ function convert(
     var i = 0;
     var json;
     var result = {};
-    var str = "";
+    var str = '';
     var parser = new xml2js.Parser();
     
     parser.parseString(xml,
@@ -16,25 +16,25 @@ function convert(
             json = res;           
         });
     
-    Object.keys(json["response"]["$"]).forEach(function(key){
-        result[key] = json["response"]["$"][key];  
+    Object.keys(json['response']['$']).forEach(function(key){
+        result[key] = json['response']['$'][key];  
     });
     
     
-    if (json["response"]["error"]) {
+    if (json['response']['error']) {
         
-        if (options["isChest"]) {
-            result["error"] = json["response"]["error"][0]["$"]["code"];
+        if (options['isChest']) {
+            result['error'] = json['response']['error'][0]['$']['code'];
         } else {
-            result["error"] = json["response"]["error"][0];
+            result['error'] = json['response']['error'][0];
         }
     }
     
-    result["data"] = [];
+    result['data'] = [];
     
-    if (json["response"]["d"]) {
+    if (json['response']['d']) {
         
-        json["response"]["d"].forEach(
+        json['response']['d'].forEach(
             function(obj){
                 var row = {};
                 var types = [];
@@ -42,16 +42,16 @@ function convert(
                 
                 //console.log(obj);
                 
-                row["name"] = obj["$"]["name"];
-                row["xid"] = obj["$"]["xid"];
-                row["result"] = obj["_"];
+                row['name'] = obj['$']['name'];
+                row['xid'] = obj['$']['xid'];
+                row['result'] = obj['_'];
                 
-                if (typeof obj["_"] != "string") {
+                if (typeof obj['_'] != 'string') {
                     
-                    row["properties"] = {};
+                    row['properties'] = {};
     
                     for (var prop in obj) {
-                        if (prop != "$"  && types.indexOf(prop == -1)) {
+                        if (prop != '$'  && types.indexOf(prop == -1)) {
                             types[j++] = prop;
                         }
                     }
@@ -62,13 +62,13 @@ function convert(
                                 function(prop){
                                     //console.log(prop);
                                     
-                                    if (prop["$"]["parent"]) {
-                                        row[prop["$"]["name"]] = {};
-                                        row[prop["$"]["name"]]["name"] = prop["$"]["parent"];
-                                        row[prop["$"]["name"]]["xid"] = prop["$"]["parent-xid"];
-                                        row[prop["$"]["name"]]["id"] = prop["_"];
+                                    if (prop['$']['parent']) {
+                                        row[prop['$']['name']] = {};
+                                        row[prop['$']['name']]['name'] = prop['$']['parent'];
+                                        row[prop['$']['name']]['xid'] = prop['$']['parent-xid'];
+                                        row[prop['$']['name']]['id'] = prop['_'];
                                     } else {
-                                        row["properties"][prop["$"]["name"]] = prop["_"];
+                                        row['properties'][prop['$']['name']] = prop['_'];
                                     }
                                 }
                             )
@@ -77,7 +77,7 @@ function convert(
                     
                 }
                 
-                result["data"][i++] = row;   
+                result['data'][i++] = row;   
             });
         
     }   

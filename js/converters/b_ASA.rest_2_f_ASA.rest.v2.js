@@ -1,4 +1,4 @@
-var xml2js  = require("xml2js");
+var xml2js  = require('xml2js');
 
 function convert(
     xml,
@@ -7,7 +7,7 @@ function convert(
 {
     var json;
     var result = {};
-    var str = "";
+    var str = '';
     var parser = new xml2js.Parser();
     
     parser.parseString(xml,
@@ -15,53 +15,53 @@ function convert(
             json = res;           
         });
     
-    Object.keys(json["response"]["$"]).forEach(function(key){
-        result[key] = json["response"]["$"][key];  
+    Object.keys(json['response']['$']).forEach(function(key){
+        result[key] = json['response']['$'][key];  
     });
     
-    if (json["response"]["error"]) {
+    if (json['response']['error']) {
         
-        if (options["isChest"]) {
-            result["error"] = json["response"]["error"][0]["$"]["code"];
+        if (options['isChest']) {
+            result['error'] = json['response']['error'][0]['$']['code'];
         } else {
-            result["error"] = json["response"]["error"][0];
+            result['error'] = json['response']['error'][0];
         }
     }
     
-    result["data"] = {};
+    result['data'] = {};
     
-    if (json["response"]["d"]) {
+    if (json['response']['d']) {
         
-        json["response"]["d"].forEach(
+        json['response']['d'].forEach(
             function(obj){
                 var row = {};
                 var types = [];
 
                 //console.log(obj);
                 
-                if (!result["data"][obj["$"]["name"]]) {
-                    result["data"][obj["$"]["name"]] = [];
+                if (!result['data'][obj['$']['name']]) {
+                    result['data'][obj['$']['name']] = [];
                 }
                 
-                if (typeof obj["_"] != "string") {
+                if (typeof obj['_'] != 'string') {
                 
                     for (var prop in obj) {
-                        if (prop != "$"  && types.indexOf(prop == -1)) {
+                        if (prop != '$'  && types.indexOf(prop == -1)) {
                             types.push(prop);
                         }
                     }
                     
-                    row["xid"] = obj["$"]["xid"];
+                    row['xid'] = obj['$']['xid'];
                 
                     types.forEach(
                         function(name){
                             obj[name].forEach(
                                 function(prop){
                                     //console.log(prop);
-                                    if (prop["$"]["parent"]) {
-                                        row[prop["$"]["name"]] = prop["$"]["parent-xid"];;
+                                    if (prop['$']['parent']) {
+                                        row[prop['$']['name']] = prop['$']['parent-xid'];;
                                     } else {
-                                        row[prop["$"]["name"]] = prop["_"];
+                                        row[prop['$']['name']] = prop['_'];
                                     }
                                 }
                             )
@@ -69,12 +69,12 @@ function convert(
                     );
                 
                 } else {
-                    row[obj["$"]["xid"]] = obj["_"];
+                    row[obj['$']['xid']] = obj['_'];
 
                     //console.log(obj);
                 }
                 
-                result["data"][obj["$"]["name"]].push(row);
+                result['data'][obj['$']['name']].push(row);
                 
             });
 

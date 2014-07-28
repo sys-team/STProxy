@@ -1,4 +1,4 @@
-var converter  = require("./b_ASA.rest_2_f_v2");
+var converter  = require('./b_ASA.rest_2_f_v2');
 
 function convert(
     xml,
@@ -7,7 +7,7 @@ function convert(
 {
     var coptions = {};
     
-    coptions["isChest"] = true;
+    coptions['isChest'] = true;
     
     return converter.convert(xml, coptions);
 }

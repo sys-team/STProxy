@@ -1,14 +1,15 @@
-var http = require("http");
-var config = require("./config");
-var httpObject = require("./httpObject");
-var router = require("./router");
-var status = require("./status");
-var headers = require("./headers");
-var variables = require("./variables");
-var body = require("./body");
-var irequest = require("./request");
-var translate = require("./translate");
-var check = require("./check");
+var http = require('http');
+var config = require('./config');
+var httpObject = require('./httpObject');
+var router = require('./router');
+var status = require('./status');
+var headers = require('./headers');
+var variables = require('./variables');
+var body = require('./body');
+var irequest = require('./request');
+var translate = require('./translate');
+var check = require('./check');
+var log = require('./log');
 
 function start() {
   
@@ -20,35 +21,38 @@ function start() {
         var route= {};
         
         var frontendRequestData = {},
-            frontendRequestBody = "";
+            frontendRequestBody = '';
             
         var frontendResponseStatus = 200,
             frontendResponseHeaders = {},
-            frontendResponseBody = "";
+            frontendResponseBody = '';
             
         var backendRequestHeaders = {},
             backendRequestVariables = {},
-            backendRequestBody = "";
+            backendRequestBody = '';
 
-        request.on("data", function (chunk)
+        request.on('data', function (chunk)
             {
                 frontendRequestBody += chunk;
             });
 
         
-        request.on("end", function() {
+        request.on('end', function() {
     
             frontendRequestData = httpObject.parse(request);
+            
             route = router.route(
                 frontendRequestData,
                 frontendRequestBody,
                 configObject
             );
             
+            
             if (!route) {
-                response.writeHead(404, {"Content-Type": "text/plain"});
-                response.write("No route found");
+                response.writeHead(404, {'Content-Type': 'text/plain'});
+                response.write('No route found');
                 response.end();
+                log.request(frontendRequestData, route, 404);
                 return;
             }
 
@@ -56,72 +60,86 @@ function start() {
             backendRequestVariables = variables.makeBackend(frontendRequestData, route);
             backendRequestBody = body.makeBackend(frontendRequestData, route, frontendRequestBody);
 
-            switch (frontendRequestData["headers"]["stcproxy"]) {
+            switch (frontendRequestData['headers']['stcproxy']) {
                 
-                case "mirror":
-                case "trace request":
+                case 'mirror':
+                case 'trace request':
 
-                    response.writeHead(200, {"Content-Type": "text/plain"});
-                    response.write("httpObject:\n");
+                    response.writeHead(200, {'Content-Type': 'text/plain'});
+                    response.write('httpObject:\n');
                     response.write(JSON.stringify(frontendRequestData));
-                    response.write("\n");
+                    response.write('\n');
                     
                     if (frontendRequestBody) {
-                        response.write("httpBody:\n");
+                        response.write('httpBody:\n');
                         response.write(frontendRequestBody);
-                        response.write("\n");
+                        response.write('\n');
                     }
                     
-                    response.write("\n");
+                    response.write('\n');
                     response.end();
+                    
+                    log.request(frontendRequestData, route, 200);
                                       
                     break;
                 
-                case "trace route":
+                case 'trace route':
 
-                    response.writeHead(200, {"Content-Type": "application/json"});
+                    response.writeHead(200, {'Content-Type': 'application/json'});
                     response.write(JSON.stringify(route));
                     
-                    response.write("\n");
+                    response.write('\n');
                     response.end();
+                    
+                    log.request(frontendRequestData, route, 200);
                     
                     break;
                 
-                case "trace headers":
+                case 'trace headers':
                     
-                    response.writeHead(200, {"Content-Type": "application/json"});
+                    response.writeHead(200, {'Content-Type': 'application/json'});
                     response.write(JSON.stringify(backendRequestHeaders));
                     
-                    response.write("\n");
+                    response.write('\n');
                     response.end();
                     
-                case "trace variables":
+                    log.request(frontendRequestData, route, 200);
                     
-                    response.writeHead(200, {"Content-Type": "application/json"});
+                    break;                    
+                    
+                case 'trace variables':
+                    
+                    response.writeHead(200, {'Content-Type': 'application/json'});
                     response.write(JSON.stringify(backendRequestVariables));
 
-                    response.write("\n");
+                    response.write('\n');
                     response.end();
+                    
+                    log.request(frontendRequestData, route, 200);
                     
                     break;
                 
-                case "trace body":
+                case 'trace body':
                     
-                    response.writeHead(200, {"Content-Type": "text/plain"});
+                    response.writeHead(200, {'Content-Type': 'text/plain'});
                     response.write(backendRequestBody);
                     
-                    response.write("\n");
+                    response.write('\n');
                     response.end();
+                    
+                    log.request(frontendRequestData, route, 200);
                     
                     break;
             
-                case "trace config":
+                case 'trace config':
                     
-                    response.writeHead(200, {"Content-Type": "application/json"});
+                    response.writeHead(200, {'Content-Type': 'application/json'});
                     response.write(JSON.stringify(configObject));
                 
-                    response.write("\n");
+                    response.write('\n');
                     response.end();
+                    
+                    log.request(frontendRequestData, route, 200);
                     
                     break;
                 
@@ -140,9 +158,12 @@ function start() {
                         {
                             if (backendResponseError) {
                                 
-                                response.writeHead(500, {"Content-Type": "text/plain"});
+                                response.writeHead(500, {'Content-Type': 'text/plain'});
                                 response.write(backendResponseError.message);
                                 response.end();
+                                
+                                log.request(frontendRequestData, route, 500);
+                                
                                 return;
                             
                             }
@@ -150,9 +171,12 @@ function start() {
                             if (!check.backendResponse(route, backendResponseBody)) {
                                 
                                 //console.log(backendResponseBody);
-                                response.writeHead(500, {"Content-Type": "text/plain"});
-                                response.write("Invalid response from backend");
+                                response.writeHead(500, {'Content-Type': 'text/plain'});
+                                response.write('Invalid response from backend');
                                 response.end();
+                                
+                                log.request(frontendRequestData, route, 500);
+                                
                                 return;
                             
                             }
@@ -162,9 +186,12 @@ function start() {
                             if (!check.frontendResponse(route, frontendResponseBody)) {
                                 
                                 //console.log(frontendResponseBody);
-                                response.writeHead(500, {"Content-Type": "text/plain"});
-                                response.write("Invalid response to frontend");
+                                response.writeHead(500, {'Content-Type': 'text/plain'});
+                                response.write('Invalid response to frontend');
                                 response.end();
+                                
+                                log.request(frontendRequestData, route, 500);
+                                
                                 return;
                             
                             }
@@ -175,23 +202,25 @@ function start() {
                                                                            frontendResponseBody);
                             response.writeHead(frontendResponseStatus, frontendResponseHeaders);
                             
-                            if (frontendRequestData["method"] != "HEAD") {
+                            if (frontendRequestData['method'] != 'HEAD') {
                                 response.write(frontendResponseBody.toString());
                             } else {
-                                response.write("\n");
+                                response.write('\n');
                             }
                             
                             response.end();
+                            
+                            log.request(frontendRequestData, route, frontendResponseStatus);
                         });
                   
             }
         });
     };
 
-    var domain = require("domain").create();
+    var domain = require('domain').create();
     var configObject = {};
      
-    domain.on("error", function(err){
+    domain.on('error', function(err){
         console.log(err);
     });
      
@@ -200,11 +229,11 @@ function start() {
         configObject = JSON.parse(config.readConfig());
         
         if (!configObject) {
-            console.log("Incorrect JSON in config file(s)");
+            console.log('Incorrect JSON in config file(s)');
             return;
         }
         
-        http.createServer(onRequest).listen(configObject["service"]["port"]);
+        http.createServer(onRequest).listen(configObject['service']['port']);
 
     });
 

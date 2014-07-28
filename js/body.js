@@ -1,4 +1,4 @@
-var translate = require("./translate");
+var translate = require('./translate');
 
 function makeBackend(
     frontendRequestData,
@@ -6,15 +6,15 @@ function makeBackend(
     frontendRequestBody
 )
 {
-    var result = "";
+    var result = '';
     
-    switch (route["method"]) {
-        case "GET":
+    switch (route['method']) {
+        case 'GET':
             
             result = undefined;
             break;
         
-        case "POST":
+        case 'POST':
             
             result = translate.frontendRequest(route, frontendRequestBody, frontendRequestData);
             break;
