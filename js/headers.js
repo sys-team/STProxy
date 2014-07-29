@@ -59,8 +59,8 @@ function makeFrontend(
         };
     });
     
-    Object.keys(route['headers']).forEach(function(key) {
-        result[key.toLowerCase()] = route['headers'][key];
+    Object.keys(route['response']['headers']).forEach(function(key) {
+        result[key.toLowerCase()] = route['response']['headers'][key];
     });    
     
     return result;

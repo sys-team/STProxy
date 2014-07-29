@@ -145,74 +145,86 @@ function start() {
                 
                 default:
                     
-                    irequest.backend(
-                        route,
-                        frontendRequestData,
-                        backendRequestHeaders,
-                        backendRequestVariables,
-                        backendRequestBody,
-                        function(
-                            backendResponseError,
-                            backendResponse,
-                            backendResponseBody)
-                        {
-                            if (backendResponseError) {
+                    if (route['backend']) {
+
+                        irequest.backend(
+                            route,
+                            frontendRequestData,
+                            backendRequestHeaders,
+                            backendRequestVariables,
+                            backendRequestBody,
+                            function(
+                                backendResponseError,
+                                backendResponse,
+                                backendResponseBody)
+                            {
+                                if (backendResponseError) {
+                                    
+                                    response.writeHead(500, {'Content-Type': 'text/plain'});
+                                    response.write(backendResponseError.message);
+                                    response.end();
+                                    
+                                    log.writeAboutRequest(frontendRequestData, route, 500);
+                                    
+                                    return;
                                 
-                                response.writeHead(500, {'Content-Type': 'text/plain'});
-                                response.write(backendResponseError.message);
+                                }
+                                
+                                if (!check.backendResponse(route, backendResponseBody)) {
+                                    
+                                    //console.log(backendResponseBody);
+                                    response.writeHead(500, {'Content-Type': 'text/plain'});
+                                    response.write('Invalid response from backend');
+                                    response.end();
+                                    
+                                    log.writeAboutRequest(frontendRequestData, route, 500);
+                                    
+                                    return;
+                                
+                                }
+                                
+                                frontendResponseObj = translate.backendResponse(route, backendResponseBody);
+                                
+                                //console.log(frontendResponseObj);
+                                
+                                if (!check.frontendResponse(route, frontendResponseObj['data'])) {
+                                    
+                                    response.writeHead(500, {'Content-Type': 'text/plain'});
+                                    response.write('Invalid response to frontend');
+                                    response.end();
+                                    
+                                    log.writeAboutRequest(frontendRequestData, route, 500);
+                                    
+                                    return;
+                                
+                                }
+                                
+                                frontendResponseStatus = status.makeFrontend(route, frontendResponseObj['data']);
+                                frontendResponseHeaders = headers.makeFrontend(route,
+                                                                               frontendRequestData,
+                                                                               frontendResponseObj['attributes']);
+                                response.writeHead(frontendResponseStatus, frontendResponseHeaders);
+                                
+                                if (frontendRequestData['method'] != 'HEAD') {
+                                    response.write(frontendResponseObj['data'].toString());
+                                } else {
+                                    response.write('\n');
+                                }
+                                
                                 response.end();
                                 
-                                log.writeAboutRequest(frontendRequestData, route, 500);
-                                
-                                return;
-                            
-                            }
-                            
-                            if (!check.backendResponse(route, backendResponseBody)) {
-                                
-                                //console.log(backendResponseBody);
-                                response.writeHead(500, {'Content-Type': 'text/plain'});
-                                response.write('Invalid response from backend');
-                                response.end();
-                                
-                                log.writeAboutRequest(frontendRequestData, route, 500);
-                                
-                                return;
-                            
-                            }
-                            
-                            frontendResponseObj = translate.backendResponse(route, backendResponseBody);
-                            
-                            //console.log(frontendResponseObj);
-                            
-                            if (!check.frontendResponse(route, frontendResponseObj['data'])) {
-                                
-                                response.writeHead(500, {'Content-Type': 'text/plain'});
-                                response.write('Invalid response to frontend');
-                                response.end();
-                                
-                                log.writeAboutRequest(frontendRequestData, route, 500);
-                                
-                                return;
-                            
-                            }
-                            
-                            frontendResponseStatus = status.makeFrontend(route, frontendResponseObj['data']);
-                            frontendResponseHeaders = headers.makeFrontend(route,
-                                                                           frontendRequestData,
-                                                                           frontendResponseObj['attributes']);
-                            response.writeHead(frontendResponseStatus, frontendResponseHeaders);
-                            
-                            if (frontendRequestData['method'] != 'HEAD') {
-                                response.write(frontendResponseObj['data'].toString());
-                            } else {
-                                response.write('\n');
-                            }
-                            
-                            response.end();
-                            
-                            log.writeAboutRequest(frontendRequestData, route, frontendResponseStatus);
-                        });
+                                log.writeAboutRequest(frontendRequestData, route, frontendResponseStatus);
+                            });
+                    } else {
+
+                        frontendResponseStatus = (route['response']['status'] ? route['response']['status'] : 200);
+                        frontendResponseHeaders = (route['response']['headers'] ? route['response']['headers'] : 200);
+                        
+                        response.writeHead(frontendResponseStatus, frontendResponseHeaders);
+                        response.end();
+                        
+                        log.writeAboutRequest(frontendRequestData, route, frontendResponseStatus);
+                    }
                   
             }
         });

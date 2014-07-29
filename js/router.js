@@ -10,7 +10,8 @@ function route(
     var backend = '';
     var routingMethod ='';
     
-    result['headers'] = {};
+    result['response'] = {};
+    result['response']['headers'] = {};
     
     Object.keys(configObject['frontend']).forEach(function(key) {
         
@@ -29,7 +30,7 @@ function route(
                 if (configObject['frontend'][key]['response']) {
                     if (configObject['frontend'][key]['response']['headers']) {
                         Object.keys(configObject['frontend'][key]['response']['headers']).forEach(function(hkey){
-                            result['headers'][hkey] = configObject['frontend'][key]['response']['headers'][hkey];
+                            result['response']['headers'][hkey] = configObject['frontend'][key]['response']['headers'][hkey];
                         });
                     }
                 }
@@ -47,12 +48,16 @@ function route(
      || frontendRequestData['method'] == 'PATCH') {
         
         routingMethod = 'POST';
-    }
-    
-    if (frontendRequestData['method'] == 'GET'
-     || frontendRequestData['method'] == 'HEAD') {
+        
+    } else if (frontendRequestData['method'] == 'GET'
+              || frontendRequestData['method'] == 'HEAD') {
         
         routingMethod = 'GET';
+        
+    } else {
+        
+        routingMethod = frontendRequestData['method'];
+        
     }
     
     Object.keys(configObject['routing']).forEach(function(key) {
@@ -65,9 +70,14 @@ function route(
                 if (configObject['routing'][key]['response']) {
                     if (configObject['routing'][key]['response']['headers']) {
                         Object.keys(configObject['routing'][key]['response']['headers']).forEach(function(hkey){
-                            result['headers'][hkey] = configObject['routing'][key]['response']['headers'][hkey];
+                            result['response']['headers'][hkey] = configObject['routing'][key]['response']['headers'][hkey];
                         });
                     }
+                                       
+                    if (configObject['routing'][key]['response']['status']) {
+                        result['response']['status'] = configObject['routing'][key]['response']['status'];
+                    }
+                    
                 }
                 
                 return false;
@@ -95,8 +105,9 @@ function route(
         });
     
     result['output-format'] = 'json';
+    //console.log(result);
     
-    if (result['language']) {
+    if (result['language'] || result['frontend'] && result['response']['status']) {
         return result;
     } else {
         return undefined;
