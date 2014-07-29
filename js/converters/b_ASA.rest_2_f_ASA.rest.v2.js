@@ -49,7 +49,7 @@ function convert(
                         }
                     }
                     
-                    row['xid'] = obj['$']['xid'];
+                    row['id'] = obj['$']['xid'];
                 
                     types.forEach(
                         function(name){
@@ -57,8 +57,8 @@ function convert(
                                 function(prop){
                                     //console.log(prop);
                                     if (prop['$']['parent']) {
-                                        row[prop['$']['name']] = prop['$']['parent-xid'];;
-                                    } else {
+                                        row[prop['$']['name']] = prop['$']['parent-xid'];
+                                    } else if(prop['$']['name'] != 'id') {
                                         row[prop['$']['name']] = prop['_'];
                                     }
                                 }

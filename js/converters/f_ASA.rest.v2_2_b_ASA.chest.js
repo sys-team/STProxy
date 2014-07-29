@@ -26,12 +26,17 @@ function convert(
                 var record = result.ele((options['isPatch'] ? 'm' : 'd'));
             
                 record.att('name', objArray);
-                if (obj['xid']) {record.att('xid', obj['xid']);}
+                
+                if (obj['id']) {
+                    record.att('xid', obj['id']);
+                } else if (obj['xid']) {
+                    record.att('xid', obj['xid']);
+                }
                 
                 for (var prop in obj){
                     var attr;
                         
-                    if (prop != 'xid') {
+                    if (prop != 'xid' && prop != 'id') {
                         if (xidRegexp.test(obj[prop])) {
                             attr = record.ele('d');
                             attr.att('name', prop);
