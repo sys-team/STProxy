@@ -8,7 +8,8 @@ function convert(
     var i = 0;
     var json;
     var result = {};
-    var str = '';
+    var resultObj = {};
+    var attr = {};
     var parser = new xml2js.Parser();
     
     parser.parseString(xml,
@@ -17,7 +18,8 @@ function convert(
         });
     
     Object.keys(json['response']['$']).forEach(function(key){
-        result[key] = json['response']['$'][key];  
+        attr[key] = json['response']['$'][key];
+        result[key] = json['response']['$'][key]; 
     });
     
     
@@ -83,9 +85,10 @@ function convert(
     }   
     //console.log(result);
     
-    str = JSON.stringify(result); 
+    resultObj['data']  = JSON.stringify(result);
+    resultObj['attributes']  = attr; 
 
-    return str;    
+    return resultObj;   
 }
 
 

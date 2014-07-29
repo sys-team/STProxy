@@ -7,6 +7,7 @@ function backendResponse(
     backendResponseBody
 ) {
     var result = '';
+    var resultObj = {};
     var cName = '';
     var options = {};
     
@@ -35,14 +36,14 @@ function backendResponse(
         } else {
             try {
                 var converter = require(cName);
-                result = converter.convert(result, options);
+                resultObj = converter.convert(result, options);
             } catch(e) {
                 console.log(e);
             }
         }
     }
 
-    return result;    
+    return resultObj;    
 }
 
 ////////////

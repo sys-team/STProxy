@@ -31,11 +31,10 @@ function makeBackend(
 function makeFrontend(
     route,
     frontendRequestData,
-    frontendResponseBody
+    attributes
 )
 {
     var result = {};
-    var parsed = {};
     
     switch (route['output-format']){
         case 'xml':
@@ -58,11 +57,9 @@ function makeFrontend(
         result['connection'] = 'close';
     }
     
-    parsed = JSON.parse(frontendResponseBody);
-    
-    Object.keys(parsed).forEach(function(key){
+    Object.keys(attributes).forEach(function(key){
         if (key != 'data') {
-            result[key.toLowerCase()] = parsed[key].toString();
+            result[key.toLowerCase()] = attributes[key].toString();
         };
     });
     

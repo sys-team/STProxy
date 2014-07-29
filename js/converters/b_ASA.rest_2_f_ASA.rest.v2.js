@@ -3,11 +3,11 @@ var xml2js  = require('xml2js');
 function convert(
     xml,
     options
-)
-{
+) {
     var json;
     var result = {};
-    var str = '';
+    var resultObj = {};
+    var attr = {};
     var parser = new xml2js.Parser();
     
     parser.parseString(xml,
@@ -16,7 +16,7 @@ function convert(
         });
     
     Object.keys(json['response']['$']).forEach(function(key){
-        result[key] = json['response']['$'][key];  
+        attr[key] = json['response']['$'][key];  
     });
     
     if (json['response']['error']) {
@@ -27,9 +27,7 @@ function convert(
             result['error'] = json['response']['error'][0];
         }
     }
-    
-    result['data'] = {};
-    
+
     if (json['response']['d']) {
         
         json['response']['d'].forEach(
@@ -39,8 +37,8 @@ function convert(
 
                 //console.log(obj);
                 
-                if (!result['data'][obj['$']['name']]) {
-                    result['data'][obj['$']['name']] = [];
+                if (!result[obj['$']['name']]) {
+                    result[obj['$']['name']] = [];
                 }
                 
                 if (typeof obj['_'] != 'string') {
@@ -74,16 +72,16 @@ function convert(
                     //console.log(obj);
                 }
                 
-                result['data'][obj['$']['name']].push(row);
+                result[obj['$']['name']].push(row);
                 
             });
 
     }
     
-    
-    str = JSON.stringify(result); 
+    resultObj['data']  = JSON.stringify(result);
+    resultObj['attributes']  = attr; 
 
-    return str;    
+    return resultObj;    
 }
 
 

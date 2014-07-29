@@ -181,11 +181,12 @@ function start() {
                             
                             }
                             
-                            frontendResponseBody = translate.backendResponse(route, backendResponseBody);
+                            frontendResponseObj = translate.backendResponse(route, backendResponseBody);
                             
-                            if (!check.frontendResponse(route, frontendResponseBody)) {
+                            //console.log(frontendResponseObj);
+                            
+                            if (!check.frontendResponse(route, frontendResponseObj['data'])) {
                                 
-                                //console.log(frontendResponseBody);
                                 response.writeHead(500, {'Content-Type': 'text/plain'});
                                 response.write('Invalid response to frontend');
                                 response.end();
@@ -196,14 +197,14 @@ function start() {
                             
                             }
                             
-                            frontendResponseStatus = status.makeFrontend(route, frontendResponseBody);
+                            frontendResponseStatus = status.makeFrontend(route, frontendResponseObj['data']);
                             frontendResponseHeaders = headers.makeFrontend(route,
                                                                            frontendRequestData,
-                                                                           frontendResponseBody);
+                                                                           frontendResponseObj['attributes']);
                             response.writeHead(frontendResponseStatus, frontendResponseHeaders);
                             
                             if (frontendRequestData['method'] != 'HEAD') {
-                                response.write(frontendResponseBody.toString());
+                                response.write(frontendResponseObj['data'].toString());
                             } else {
                                 response.write('\n');
                             }
