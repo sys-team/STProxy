@@ -1,8 +1,7 @@
 function makeBackend(
     route,
     frontendRequestData
-)
-{
+) {
     var result = {},
         transHeaders = ['Authorization',
                         'if-none-match',
@@ -11,20 +10,18 @@ function makeBackend(
         
     result['user-agent'] = 'STProxy 0.1';
     
-    transHeaders.forEach(function(value, ind, arr)
-        {
-            if (frontendRequestData['headers'][value.toLowerCase()]) {
-                result[value] = frontendRequestData['headers'][value.toLowerCase()];
-            }
-        });
-    
-    Object.keys(frontendRequestData['headers']).forEach(function(key)
-        {                                                
-            if (key.toLowerCase().indexOf('backend-') == 0) {
-                result[key.toLowerCase().replace('backend-', '')] = frontendRequestData['headers'][key.toLowerCase()];
-            }
-        });
+    transHeaders.forEach(function(value, ind, arr) {
+        if (frontendRequestData['headers'][value.toLowerCase()]) {
+            result[value] = frontendRequestData['headers'][value.toLowerCase()];
+        }
+    });
 
+    Object.keys(frontendRequestData['headers']).forEach(function(key) {                                                
+        if (key.toLowerCase().indexOf('backend-') == 0) {
+            result[key.toLowerCase().replace('backend-', '')] = frontendRequestData['headers'][key.toLowerCase()];
+        }
+    });
+    
     return result;
 }
 
@@ -32,8 +29,7 @@ function makeFrontend(
     route,
     frontendRequestData,
     attributes
-)
-{
+) {
     var result = {};
     
     switch (route['output-format']){
@@ -62,6 +58,10 @@ function makeFrontend(
             result[key.toLowerCase()] = attributes[key].toString();
         };
     });
+    
+    Object.keys(route['headers']).forEach(function(key) {
+        result[key.toLowerCase()] = route['headers'][key];
+    });    
     
     return result;
 }

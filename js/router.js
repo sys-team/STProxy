@@ -10,6 +10,8 @@ function route(
     var backend = '';
     var routingMethod ='';
     
+    result['headers'] = {};
+    
     Object.keys(configObject['frontend']).forEach(function(key) {
         
             if (frontendRequestData['url'].indexOf(configObject['frontend'][key]['url']) == 0) {
@@ -22,6 +24,14 @@ function route(
                 
                 if (result['frontendUrl'][result['frontendUrl'].length -1] != '/') {
                     result['frontendUrl'] = result['frontendUrl'] +'/';
+                }
+                
+                if (configObject['frontend'][key]['response']) {
+                    if (configObject['frontend'][key]['response']['headers']) {
+                        Object.keys(configObject['frontend'][key]['response']['headers']).forEach(function(hkey){
+                            result['headers'][hkey] = configObject['frontend'][key]['response']['headers'][hkey];
+                        });
+                    }
                 }
                 
                 return false;
@@ -51,6 +61,15 @@ function route(
              && configObject['routing'][key]['method'] == routingMethod){
                 
                 backend = configObject['routing'][key]['to'];
+                
+                if (configObject['routing'][key]['response']) {
+                    if (configObject['routing'][key]['response']['headers']) {
+                        Object.keys(configObject['routing'][key]['response']['headers']).forEach(function(hkey){
+                            result['headers'][hkey] = configObject['routing'][key]['response']['headers'][hkey];
+                        });
+                    }
+                }
+                
                 return false;
             }
             return true;
