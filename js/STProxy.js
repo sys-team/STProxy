@@ -199,7 +199,8 @@ function start() {
                                 
                                 }
                                 
-                                frontendResponseStatus = status.makeFrontend(route, frontendResponseObj['data']);
+                                frontendResponseStatus = status.makeFrontend(route,
+                                                                             frontendResponseObj);
                                 frontendResponseHeaders = headers.makeFrontend(route,
                                                                                frontendRequestData,
                                                                                frontendResponseObj['attributes']);

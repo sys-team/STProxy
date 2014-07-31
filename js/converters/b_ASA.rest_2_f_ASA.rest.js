@@ -3,8 +3,7 @@ var xml2js  = require('xml2js');
 function convert(
     xml,
     options
-)
-{
+) {
     var i = 0;
     var json;
     var result = {};
@@ -22,10 +21,11 @@ function convert(
         result[key] = json['response']['$'][key]; 
     });
     
+    //console.log(json['response']['error']);
     
     if (json['response']['error']) {
         
-        if (options['isChest']) {
+        if (json['response']['error'][0]['$']) {
             result['error'] = json['response']['error'][0]['$']['code'];
         } else {
             result['error'] = json['response']['error'][0];

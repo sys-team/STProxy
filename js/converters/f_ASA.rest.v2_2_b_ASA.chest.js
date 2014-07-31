@@ -3,8 +3,7 @@ var xmlBuilder  = require('xmlbuilder');
 function convert(
     jsonString,
     options
-)
-{
+) {
     var result;
     var json;
     var xidRegexp = /^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/;

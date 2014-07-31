@@ -3,8 +3,7 @@ var xmlBuilder  = require('xmlbuilder');
 function convert(
     jsonString,
     options
-)
-{
+) {
     var result;
     var json;
     
