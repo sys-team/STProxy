@@ -11,7 +11,8 @@ function makeFrontend(
 
     if (route['output-format'] == 'json') {
         if (parsed['error'] == 'Not authenticated'
-         || parsed['error'] == 'NotAuthorized') {
+         || parsed['error'] == 'NotAuthorized'
+         || parsed['error'] == 'Not authorized') {
             result = 401;
         } else if (notFoundRegexp.test(parsed['error'])) {
             result = 404;
