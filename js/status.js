@@ -5,6 +5,7 @@ function makeFrontend(
     var result = 200;
     var parsed = {};
     var notFoundRegexp = /^Entity .* not found$/;
+    var deniedRegexp = /^Permission denied on entity.*$/;
     
     //console.log(frontendResponseBody);
     parsed = JSON.parse(frontendResponseObj['data'])
@@ -14,6 +15,8 @@ function makeFrontend(
          || parsed['error'] == 'NotAuthorized'
          || parsed['error'] == 'Not authorized') {
             result = 401;
+        } else if (deniedRegexp.test(parsed['error'])) {
+            result = 403;
         } else if (notFoundRegexp.test(parsed['error'])) {
             result = 404;
         } else if (parsed['error']) {
