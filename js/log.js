@@ -6,7 +6,7 @@ function writeAboutRequest(
 
     console.log('%s %s %s %s %s %s %s %s',
         new Date().toISOString().replace('T', ' ').replace('Z', ''),
-        requestData['client-ip'].toString(),
+        (requestData.headers['x-real-ip'] || requestData['client-ip']).toString(),
         (route ? route['frontend'] : 'Undefined'),
         requestData['method'],
         requestData['url'],
