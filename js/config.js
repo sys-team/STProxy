@@ -41,9 +41,9 @@ function readConfig(
     process.argv.forEach(function (val, index, array) {
         if (val == '--config'){
             if (array[index +1]) {
-                //console.log(array[index +1].substr(0, array[index +1].indexOf('=')));
-                //.log(array[index +1].substr(array[index +1].indexOf('=')));
-
+                if (array[index +1].indexOf('service.port=') == 0){
+                    result['service']['port'] = array[index +1].replace('service.port=', '');
+                }
             };
             
         }
