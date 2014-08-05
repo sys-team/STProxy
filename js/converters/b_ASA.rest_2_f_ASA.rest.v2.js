@@ -16,9 +16,11 @@ function convert(
         });
     
     Object.keys(json['response']['$']).forEach(function(key){
-        attr[key] = json['response']['$'][key];  
+        attr[key] = json['response']['$'][key];
+        if (options['metadata']) {
+           result[key] = json['response']['$'][key];
+        }
     });
-    
     
     //console.log(json['response']['error']);
     if (json['response']['error']) {

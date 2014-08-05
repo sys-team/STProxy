@@ -33,6 +33,10 @@ function route(
                             result['response']['headers'][hkey] = configObject['frontend'][key]['response']['headers'][hkey];
                         });
                     }
+                    
+                    if (configObject['frontend'][key]['response']['metadata']) {
+                         result['response']['metadata'] = configObject['frontend'][key]['response']['metadata'];
+                    }
                 }
                 
                 return false;
@@ -76,6 +80,10 @@ function route(
                                        
                     if (configObject['routing'][key]['response']['status']) {
                         result['response']['status'] = configObject['routing'][key]['response']['status'];
+                    }
+                    
+                    if (configObject['routing'][key]['response']['metadata']) {
+                        result['response']['metadata'] = configObject['routing'][key]['response']['metadata'];
                     }
                     
                 }

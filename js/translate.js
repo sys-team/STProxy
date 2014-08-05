@@ -13,6 +13,12 @@ function backendResponse(
     
     result = backendResponseBody;
     
+    if (route['response']) {
+        if (route['response']['metadata']) {
+            options['metadata'] = route['response']['metadata'];
+        }
+    }
+    
     //console.log(backendResponseBody);
 
 

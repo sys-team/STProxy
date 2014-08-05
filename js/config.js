@@ -4,8 +4,7 @@ var deepmerge = require('./STDeepMerge');
 function readConfig(
     configDir,
     configName
-)
-{
+) {
     var result = {};
     var str = '';
 
@@ -39,6 +38,16 @@ function readConfig(
     });
     
     //console.log(result);
+    process.argv.forEach(function (val, index, array) {
+        if (val == '--config'){
+            if (array[index +1]) {
+                //console.log(array[index +1].substr(0, array[index +1].indexOf('=')));
+                //.log(array[index +1].substr(array[index +1].indexOf('=')));
+
+            };
+            
+        }
+    });
 
     return JSON.stringify(result);   
     
