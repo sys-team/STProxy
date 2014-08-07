@@ -6,11 +6,11 @@ function makeFrontend(
     var parsed = {};
     var notFoundRegexp = /^Entity .* not found$/;
     var deniedRegexp = /^Permission denied on entity.*$/;
-    
-    //console.log(frontendResponseBody);
-    parsed = JSON.parse(frontendResponseObj['data'])
 
     if (route['output-format'] == 'json') {
+        
+        parsed = JSON.parse(frontendResponseObj['data'])
+        
         if (parsed['error'] == 'Not authenticated'
          || parsed['error'] == 'NotAuthorized'
          || parsed['error'] == 'Not authorized') {
@@ -24,8 +24,10 @@ function makeFrontend(
         } else if (frontendResponseObj['attributes']['page-row-count'] == '0' && route['method'] == 'GET' ) {
             result = 204;
         }
+    } else {
+        result = 200;        
     }
-        
+    
     return result;
 }
 

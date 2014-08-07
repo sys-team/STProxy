@@ -2,8 +2,7 @@ function route(
     frontendRequestData,
     frontendRequestBody,
     configObject
-)
-{
+) {
     
     var result = {};
     var frontend = '';
@@ -112,7 +111,14 @@ function route(
             return true;
         });
     
-    result['output-format'] = 'json';
+
+
+    result['output-format'] = outputFormat(
+                                configObject,
+                                frontend,
+                                frontendRequestData['url'],
+                                frontendRequestData['headers']);
+    
     //console.log(result);
     
     if (result['language'] || result['frontend'] && result['response']['status']) {
@@ -121,6 +127,40 @@ function route(
         return undefined;
     }
     
+}
+
+function outputFormat(
+    configObject,
+    frontend,
+    url,
+    headers
+) {
+    
+    if (!frontend) {
+        return 'json';
+    }
+    
+    if (configObject['frontend'][frontend]['response']
+    && configObject['frontend'][frontend]['response']['format'] == 'XML') {
+        //console.log('response.format');
+        return 'xml';   
+    }
+    
+    if (configObject['frontend'][frontend]['response']['formatRe']
+    && configObject['frontend'][frontend]['response']['formatRe']['URL']
+    && new RegExp(configObject['frontend'][frontend]['response']['formatRe']['URL']['XML'], 'i').test(url)){
+        //console.log('URL');
+        return 'xml';
+    }
+   
+    if (configObject['frontend'][frontend]['response']['formatRe']
+    && configObject['frontend'][frontend]['response']['formatRe']['headers']
+    && new RegExp(configObject['frontend'][frontend]['response']['formatRe']['headers']['Accept'], 'i').test(headers['accept']) ) {
+        //console.log('headers');        
+        return 'xml';
+    } 
+    
+    return 'json';
 }
 
 

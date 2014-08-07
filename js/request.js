@@ -7,8 +7,7 @@ function backend(
     backendRequestVariables,
     backendRequestBody,
     callback
-)
-{
+) {
     var options = {};
     
     options['strictSSL'] = false;

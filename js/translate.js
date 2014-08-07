@@ -13,6 +13,8 @@ function backendResponse(
     
     result = backendResponseBody;
     
+    resultObj['attributes'] = {};
+    
     if (route['response']) {
         if (route['response']['metadata']) {
             options['metadata'] = route['response']['metadata'];
@@ -47,6 +49,8 @@ function backendResponse(
                 console.log(e);
             }
         }
+    } else {
+        resultObj['data'] = result;
     }
 
     return resultObj;    
