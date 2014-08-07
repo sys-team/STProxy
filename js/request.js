@@ -1,5 +1,12 @@
 var request  = require('request');
 
+function preprocessUrl(
+    url
+) {
+    
+    return url.replace('.xml', '');
+}
+
 function backend(
     route,
     frontendRequestData,
@@ -14,7 +21,7 @@ function backend(
     options['encoding'] = 'binary';
     
     options['url'] =  route['url'] + (frontendRequestData['url'] != '/' ?
-                      '/' + frontendRequestData['url'].replace(route['frontendUrl'], '') : '');
+                      '/' + preprocessUrl(frontendRequestData['url']).replace(route['frontendUrl'], '') : '');
     
 
     options['method'] = route['method'];
