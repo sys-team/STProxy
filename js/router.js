@@ -140,8 +140,12 @@ function outputFormat(
         return 'json';
     }
     
-    if (configObject['frontend'][frontend]['response']
-    && configObject['frontend'][frontend]['response']['format'] == 'XML') {
+    if (!configObject['frontend'][frontend]['response']) {
+        return 'json';
+    }
+    
+    
+    if (configObject['frontend'][frontend]['response']['format'] == 'XML') {
         //console.log('response.format');
         return 'xml';   
     }
