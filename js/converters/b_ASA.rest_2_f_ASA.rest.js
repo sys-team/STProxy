@@ -53,7 +53,7 @@ function convert(
                     row['properties'] = {};
     
                     for (var prop in obj) {
-                        if (prop != '$'  && types.indexOf(prop == -1)) {
+                        if (prop != '$' && types.indexOf(prop == -1)) {
                             types[j++] = prop;
                         }
                     }
@@ -65,10 +65,10 @@ function convert(
                                     //console.log(prop);
                                     
                                     if (prop['$']['parent']) {
-                                        row[prop['$']['name']] = {};
-                                        row[prop['$']['name']]['name'] = prop['$']['parent'];
-                                        row[prop['$']['name']]['xid'] = prop['$']['parent-xid'];
-                                        row[prop['$']['name']]['id'] = prop['_'];
+                                        row['properties'][prop['$']['name']] = {};
+                                        row['properties'][prop['$']['name']]['name'] = prop['$']['parent'];
+                                        row['properties'][prop['$']['name']]['xid'] = prop['$']['parent-xid'];
+                                        row['properties'][prop['$']['name']]['id'] = prop['_'];
                                     } else {
                                         row['properties'][prop['$']['name']] = prop['_'];
                                     }
