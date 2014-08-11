@@ -35,12 +35,12 @@ function makeFrontend(
     switch (route['output-format']){
         case 'xml':
             
-            result['Content-Type']= 'text/xml';
+            result['Content-Type']= 'text/xml; charset=' + route['output-encoding'];
             break;
         
         case 'json':
             
-            result['Content-Type']= 'application/json';
+            result['Content-Type']= 'application/json; charset=' + route['output-encoding'];
             break;
         
         default:
