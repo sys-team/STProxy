@@ -34,6 +34,10 @@ function convert(
 
     if (json['response']['d']) {
         
+        if (!options['titles']) {
+            result['array'] = [];
+        }
+        
         json['response']['d'].forEach(
             function(obj){
                 var row = {};
@@ -41,9 +45,11 @@ function convert(
 
                 //console.log(obj);
                 
-                if (!result[obj['$']['name']]) {
+                if (!result[obj['$']['name']]
+                && options['titles']) {
                     result[obj['$']['name']] = [];
                 }
+                
                 
                 if (typeof obj['_'] != 'string') {
                 
@@ -76,13 +82,23 @@ function convert(
                     //console.log(obj);
                 }
                 
-                result[obj['$']['name']].push(row);
+                if (options['titles']) {
+                    result[obj['$']['name']].push(row);
+                } else {
+                    result['array'].push(row);
+                }
                 
             });
 
     }
     
-    resultObj['data']  = JSON.stringify(result);
+
+    resultObj['data'] = JSON.stringify(result);
+    if (!options['titles']){
+        resultObj['dataArray'] = result['array'];
+    }
+
+    //console.log(resultObj)
     resultObj['attributes']  = attr; 
 
     return resultObj;    

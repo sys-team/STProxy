@@ -36,6 +36,10 @@ function route(
                     if (configObject['frontend'][key]['response']['metadata']) {
                          result['response']['metadata'] = configObject['frontend'][key]['response']['metadata'];
                     }
+                    
+                    if (configObject['frontend'][key]['response']['titles']) {
+                         result['response']['titles'] = configObject['frontend'][key]['response']['titles'];
+                    }
                 }
                 
                 return false;

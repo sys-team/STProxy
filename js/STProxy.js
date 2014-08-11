@@ -207,7 +207,12 @@ function start() {
                                 response.writeHead(frontendResponseStatus, frontendResponseHeaders);
                                 
                                 if (frontendRequestData['method'] != 'HEAD') {
-                                    response.write(frontendResponseObj['data'].toString());
+
+                                    if (frontendResponseObj['dataArray']) {
+                                        response.write(JSON.stringify(frontendResponseObj['dataArray']));
+                                    } else {
+                                        response.write(frontendResponseObj['data'].toString());
+                                    }
                                 } else {
                                     response.write('\n');
                                 }

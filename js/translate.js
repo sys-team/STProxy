@@ -19,6 +19,9 @@ function backendResponse(
         if (route['response']['metadata']) {
             options['metadata'] = route['response']['metadata'];
         }
+        if (route['response']['titles']) {
+            options['titles'] = route['response']['titles'];
+        }
     }
     
     //console.log(backendResponseBody);

@@ -1,8 +1,7 @@
 function backendResponse(
     route,
     backendResponseBody
-)
-{
+) {
     
     //console.log(backendResponseBody);
     
@@ -12,7 +11,6 @@ function backendResponse(
         } catch (err) {
             return false;
         }
- 
     }
 
     return true;
@@ -21,18 +19,15 @@ function backendResponse(
 function frontendResponse(
     route,
     frontendResponseBody
-)
-{
-    
-    //console.log(backendResponseBody);
+) {
     
     if (route['output-format'] == 'json') {
         try {
             parsed = JSON.parse(frontendResponseBody);
         } catch (err) {
+            //console.log(err);
             return false;
         }
- 
     }
 
     return true;
