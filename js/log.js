@@ -2,7 +2,7 @@ function writeAboutRequest(
     requestData,
     route,
     status
-){
+) {
 
     console.log('%s %s %s %s %s %s %s %s',
         new Date().toISOString().replace('T', ' ').replace('Z', ''),
@@ -16,5 +16,14 @@ function writeAboutRequest(
     )
 }
 
-exports.writeAboutRequest = writeAboutRequest;
+function writeString(
+    data
+) {
+    console.log('%s %s',
+        new Date().toISOString().replace('T', ' ').replace('Z', ''),
+        data
+    );
+}
 
+exports.writeAboutRequest = writeAboutRequest;
+exports.writeString = writeString;

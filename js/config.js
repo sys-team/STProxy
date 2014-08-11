@@ -1,5 +1,6 @@
 var fs = require('fs');
 var deepmerge = require('./STDeepMerge');
+var log = require('./log');
 
 function readConfig(
     configDir,
@@ -22,6 +23,7 @@ function readConfig(
         if (file.toLowerCase().indexOf('stproxy.json') != -1) {
             
             str = fs.readFileSync(configDir + file, 'utf8');
+            log.writeString('Config: ' + configDir + file);
             
             try {
                 var parsed = JSON.parse(str);
@@ -48,6 +50,12 @@ function readConfig(
             
         }
     });
+    
+    if (result['frontend']) {
+        Object.keys(result['frontend']).forEach(function(key){
+            log.writeString('Frontend: ' + key + ' ' + result['frontend'][key]['url'] + ' ' +result['frontend'][key]['language']);
+        });
+    }
 
     return JSON.stringify(result);   
     

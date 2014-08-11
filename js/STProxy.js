@@ -245,6 +245,7 @@ function start() {
      
     domain.run(function(){
        
+        log.writeString('STProxy start');
         configObject = JSON.parse(config.readConfig());
         
         if (!configObject) {
@@ -253,7 +254,7 @@ function start() {
         }
         
         http.createServer(onRequest).listen(configObject['service']['port']);
-
+        log.writeString('Accepting requests on ' + configObject['service']['port'].toString());
     });
 
 };
