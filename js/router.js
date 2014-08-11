@@ -140,33 +140,34 @@ function outputFormat(
     headers
 ) {
     
-    if (!frontend) {
+    var response = frontend
+        && configObject.frontend[frontend]
+        && configObject.frontend[frontend].response
+    ;
+    
+    if (!response) {
         return 'json';
     }
     
-    if (!configObject['frontend'][frontend]['response']) {
-        return 'json';
-    }
-    
-    
-    if (configObject['frontend'][frontend]['response']['format'] == 'XML') {
+    if (response.format == 'XML') {
         //console.log('response.format');
         return 'xml';   
     }
     
-    if (configObject['frontend'][frontend]['response']['formatRe']
-    && configObject['frontend'][frontend]['response']['formatRe']['URL']
-    && new RegExp(configObject['frontend'][frontend]['response']['formatRe']['URL']['XML'], 'i').test(url)){
-        //console.log('URL');
-        return 'xml';
+    var formatRe = response.formatRe;
+    
+    if (formatRe) {
+        
+        if (formatRe.URL && new RegExp(formatRe.URL.XML, 'i').test(url)){
+            //console.log('URL');
+            return 'xml';
+        }
+       
+        if (formatRe.headers && new RegExp(formatRe.headers.Accept, 'i').test(headers['accept']) ) {
+            //console.log('headers');        
+            return 'xml';
+        } 
     }
-   
-    if (configObject['frontend'][frontend]['response']['formatRe']
-    && configObject['frontend'][frontend]['response']['formatRe']['headers']
-    && new RegExp(configObject['frontend'][frontend]['response']['formatRe']['headers']['Accept'], 'i').test(headers['accept']) ) {
-        //console.log('headers');        
-        return 'xml';
-    } 
     
     return 'json';
 }
