@@ -76,27 +76,30 @@ function route(
         routingMethod = frontendRequestData['method'];
         
     }
+    var routing = configObject['routing'];
     
-    Object.keys(configObject['routing']).forEach(function(key) {
-        
-            if (configObject['routing'][key]['from'] == frontend
-             && configObject['routing'][key]['method'] == routingMethod){
+    if (routing) {
+
+        Object.keys(routing).forEach(function(key) {
+            
+            if (new RegExp(routing[key].from, 'i').test(frontend)
+            && routing[key].method == routingMethod){
                 
-                backend = configObject['routing'][key]['to'];
+                backend = routing[key].to;
                 
-                if (configObject['routing'][key]['response']) {
-                    if (configObject['routing'][key]['response']['headers']) {
-                        Object.keys(configObject['routing'][key]['response']['headers']).forEach(function(hkey){
-                            result['response']['headers'][hkey] = configObject['routing'][key]['response']['headers'][hkey];
+                if (routing[key].response) {
+                    if (routing[key].response.headers) {
+                        Object.keys(routing[key].response.headers).forEach(function(hkey){
+                            result.response.headers[hkey] = routing[key].response.headers[hkey];
                         });
                     }
                                        
-                    if (configObject['routing'][key]['response']['status']) {
-                        result['response']['status'] = configObject['routing'][key]['response']['status'];
+                    if (routing[key].response.status) {
+                        result.response.status = routing[key].response.status;
                     }
                     
-                    if (configObject['routing'][key]['response']['metadata']) {
-                        result['response']['metadata'] = configObject['routing'][key]['response']['metadata'];
+                    if (routing[key].response.metadata) {
+                        result.response.metadata = routing[key].response.metadata;
                     }
                     
                 }
@@ -105,6 +108,8 @@ function route(
             }
             return true;
         });
+        
+    }    
     
     //console.log(backend);
         
