@@ -12,6 +12,16 @@ function route(
     result['response'] = {};
     result['response']['headers'] = {};
     
+    // globals
+    var globalResponseHeaders = configObject.response
+        && configObject.response.headers;
+        
+    if (globalResponseHeaders) {
+        Object.keys(globalResponseHeaders).forEach(function(key) {
+            result['response']['headers'][key] = globalResponseHeaders[key];
+        });
+    }
+    
     Object.keys(configObject['frontend']).forEach(function(key) {
         
             if (frontendRequestData['url'].indexOf(configObject['frontend'][key]['url']) == 0) {
