@@ -83,6 +83,15 @@ function frontendRequest(
             
         }
         
+        if (route['response']) {
+            if (route['response']['titles']) {
+                options['titles'] = route['response']['titles'];
+            }
+        }
+        
+        options['url-name'] = frontendRequestData['url-parts'][frontendRequestData['url-parts'].length -1];
+    
+        
         cName = converterName(route, 1);
     
         if (!fs.existsSync(cName)) {

@@ -15,6 +15,13 @@ function convert(
     json = JSON.parse(jsonString);
     
     result = xmlBuilder.create('post');
+    
+    if (!options['titles']) {
+        var keepArray = json;
+        
+        json['data'] = [];
+        json['data'][options['url-name']] = keepArray;
+    }
 
     for(var objArray in json['data']) {
         
