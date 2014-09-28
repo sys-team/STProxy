@@ -20,9 +20,12 @@ function backend(
     options['strictSSL'] = false;
     options['encoding'] = 'binary';
     
-    options['url'] =  route['url'] + (frontendRequestData['url'] != '/' ?
-                      '/' + preprocessUrl(frontendRequestData['url']).replace(route['frontendUrl'], '') : '');
-    
+    if (route['method'] != 'POST') {
+        options['url'] =  route['url'] + (frontendRequestData['url'] != '/' ?
+                          '/' + preprocessUrl(frontendRequestData['url']).replace(route['frontendUrl'], '') : '');
+    } else {
+        options['url'] =  route['url'] 
+    }
 
     options['method'] = route['method'];
     options['headers'] = backendRequestHeaders;
