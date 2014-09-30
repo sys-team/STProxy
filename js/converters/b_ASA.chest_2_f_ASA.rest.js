@@ -1,4 +1,4 @@
-var converter  = require('./b_ASA.rest_2_f_ASA.rest.v2');
+var converter  = require('./b_ASA.rest_2_f_ASA.rest');
 
 function convert(
     xml,
