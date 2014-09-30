@@ -1,3 +1,6 @@
+var util = require('./util');
+
+////////////
 function makeBackend(
     route,
     frontendRequestData
@@ -31,6 +34,7 @@ function makeFrontend(
     attributes
 ) {
     var result = {};
+        canResult = {};
     
     switch (route['output-format']){
         case 'xml':
@@ -61,9 +65,13 @@ function makeFrontend(
     
     Object.keys(route['response']['headers']).forEach(function(key) {
         result[key.toLowerCase()] = route['response']['headers'][key];
-    });    
+    });
     
-    return result;
+    Object.keys(result).forEach(function(key) {
+        canResult[util.canonicalize(key)] = result[key];
+    });
+
+    return canResult;
 }
 
 exports.makeBackend = makeBackend;
