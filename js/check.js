@@ -33,5 +33,43 @@ function frontendResponse(
     return true;
 }
 
+function frontendRequest(
+    route,
+    frontendRequestBody
+) {
+    /*
+    var json;
+    
+    if (route.output-format == 'xml') {
+        return true;
+    }
+    
+    json = JSON.parse(frontendRequestBody);
+    
+    
+    switch (route.frontendLanguage) {
+        
+        case 'ASA.rest':
+            
+            
+            
+            break;
+            
+        case 'ASA.rest.v2':
+            
+            if (route['response']) {
+            if (route['response']['titles']) {
+                options['titles'] = route['response']['titles'];
+            }
+            
+            break;
+    }
+            
+    */   
+    
+    return true;
+}
+
 exports.backendResponse = backendResponse;
 exports.frontendResponse = frontendResponse;
+exports.frontendRequest = frontendRequest;

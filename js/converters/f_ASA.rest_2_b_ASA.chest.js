@@ -32,7 +32,11 @@ function convert(
                         attr = record.ele((isNaN(obj['properties'][prop]) ? 'string' : 'double'), obj['properties'][prop]);
                         attr.att('name', prop);
                     } else {
-                        if (obj['properties'][prop]['id']) {attr = record.ele('d', obj['properties'][prop]['id']);}
+                        if (obj['properties'][prop]['id']) {
+                            attr = record.ele('d', obj['properties'][prop]['id']);
+                        } else {
+                            attr = record.ele('d');
+                        }
                         if (obj['properties'][prop]['name']) {attr.att('name', obj['properties'][prop]['name']);}
                         if (obj['properties'][prop]['xid']) {attr.att('xid', obj['properties'][prop]['xid']);}
                     }

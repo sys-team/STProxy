@@ -146,6 +146,19 @@ function start() {
                 default:
                     
                     if (route['backend']) {
+                        
+                        if (route['method'] == 'POST' || route['method'] == 'PATCH') {
+                            if (!check.frontendRequest(route, frontendRequestBody)) {
+                                
+                                response.writeHead(400, {'Content-Type': 'text/plain'});
+                                response.write('Wrong POST format');
+                                response.end();
+                                
+                                log.writeAboutRequest(frontendRequestData, route, 400);
+                                
+                                return;
+                            }
+                        }
 
                         irequest.backend(
                             route,

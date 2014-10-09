@@ -27,7 +27,7 @@ function canonicalize(
     arr = str.split('-');
     
     arr.forEach(function(word){
-        result = (result ? result + '-' : '') + word.charAt(0).toUpperCase() + word.slice(1);
+        result = (result ? result + '-' : '') + word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
     });
     
     toUpperParts.forEach(function(word){
