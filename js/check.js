@@ -37,36 +37,57 @@ function frontendRequest(
     route,
     frontendRequestBody
 ) {
-    /*
     var json;
+    var v3;
     
-    if (route.output-format == 'xml') {
+    if (route['output-format'] == 'xml') {
         return true;
     }
     
-    json = JSON.parse(frontendRequestBody);
-    
+    try {
+        var json = JSON.parse(frontendRequestBody);
+    } catch (err) {
+        return false;
+    }
     
     switch (route.frontendLanguage) {
         
         case 'ASA.rest':
             
-            
+            if (Object.prototype.toString.call(json.data) != '[object Array]') {
+                return false;
+            }
             
             break;
             
         case 'ASA.rest.v2':
             
             if (route['response']) {
-            if (route['response']['titles']) {
-                options['titles'] = route['response']['titles'];
+                if (route['response']['titles']) {
+                    v3 = false;
+                } else {
+                    v3 = true;
+                }
             }
             
+            if (!v3) {
+                
+                if (typeof json.data != 'object'
+                || Object.prototype.toString.call(json.data) == '[object Array]') {
+                    return false;
+                }
+                
+            } else {
+                
+                if (Object.prototype.toString.call(json) != '[object Array]') {
+                    return false;
+                }
+                
+            }
+
             break;
     }
-            
-    */   
-    
+
     return true;
 }
 
