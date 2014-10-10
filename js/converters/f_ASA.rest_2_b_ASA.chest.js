@@ -28,7 +28,7 @@ function convert(
             
                 for (var prop in obj['properties']){
                     var attr;
-                    if (prop != 'parent') {
+                    if (typeof obj['properties'][prop] != 'object') {
                         attr = record.ele((isNaN(obj['properties'][prop]) ? 'string' : 'double'), obj['properties'][prop]);
                         attr.att('name', prop);
                     } else {
@@ -37,7 +37,7 @@ function convert(
                         } else {
                             attr = record.ele('d');
                         }
-                        if (obj['properties'][prop]['name']) {attr.att('name', obj['properties'][prop]['name']);}
+                        attr.att('name', prop);
                         if (obj['properties'][prop]['xid']) {attr.att('xid', obj['properties'][prop]['xid']);}
                     }
                 };
