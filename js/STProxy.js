@@ -266,7 +266,7 @@ function start() {
             return;
         }
         
-        http.createServer(onRequest).listen(configObject['service']['port']);
+        http.createServer(onRequest).listen(configObject['service']['port'], configObject['service']['ip']);
         log.writeString('Accepting requests on ' + configObject['service']['port'].toString());
     });
 
