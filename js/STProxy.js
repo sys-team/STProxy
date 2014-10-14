@@ -251,7 +251,7 @@ function start() {
 
     var domain = require('domain').create();
     var configObject = {};
-     
+
     domain.on('error', function(err){
         console.log(err);
     });
@@ -266,7 +266,16 @@ function start() {
             return;
         }
         
-        http.createServer(onRequest).listen(configObject['service']['port'], configObject['service']['ip']);
+        if (Object.prototype.toString.call(configObject.service.ip) == '[object Array]') {
+            
+            configObject.service.ip.forEach(function(ip){
+                http.createServer(onRequest).listen(configObject.service.port, ip);
+            });
+            
+        } else {
+            http.createServer(onRequest).listen(configObject.service.port);
+        }
+
         log.writeString('Accepting requests on ' + configObject['service']['port'].toString());
     });
 
