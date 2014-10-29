@@ -171,6 +171,8 @@ function start() {
                                 backendResponse,
                                 backendResponseBody)
                             {
+                                
+                                //console.log('callback');
                                 if (backendResponseError) {
                                     
                                     response.writeHead(500, {'Content-Type': 'text/plain'});

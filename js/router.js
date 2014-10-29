@@ -117,14 +117,12 @@ function route(
             
             if (key == backend ) {
                 
-                result['backend'] = key;
+                result.backend = key;
                 
-                result['language'] = configObject['backend'][key]['language'];
-                result['format'] = configObject['backend'][key]['format'];
-                result['url'] = configObject['backend'][key]['url'];
-                result['encoding'] = configObject['backend'][key]['charset'];
-                result['method'] = configObject['backend'][key]['method'];
-                
+                Object.keys(configObject.backend[key]).forEach(function(bkey) {
+                    result[bkey] = configObject.backend[key][bkey];
+                });
+
                 return false;
             }
             return true;
