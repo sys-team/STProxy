@@ -60,9 +60,9 @@ function route(
     
     //console.log(frontend);
     
-    if (frontendRequestData['method'] == 'POST'
-     || frontendRequestData['method'] == 'PUT'
-     || frontendRequestData['method'] == 'PATCH') {
+    if (frontendRequestData.method == 'POST'
+     || frontendRequestData.method == 'PUT'
+     || frontendRequestData.method == 'PATCH') {
         
         routingMethod = 'POST';
         
@@ -73,10 +73,10 @@ function route(
         
     } else {
         
-        routingMethod = frontendRequestData['method'];
+        routingMethod = frontendRequestData.method;
         
     }
-    var routing = configObject['routing'];
+    var routing = configObject.routing;
     
     if (routing) {
 
@@ -101,7 +101,14 @@ function route(
                     if (routing[key].response.metadata) {
                         result.response.metadata = routing[key].response.metadata;
                     }
+                }
+                
+                if (routing[key].using) {
+                    result.using = {};
                     
+                    Object.keys(routing[key].using).forEach(function(ukey){
+                            result.using[ukey] = routing[key].using[ukey];
+                    });
                 }
                 
                 return false;
