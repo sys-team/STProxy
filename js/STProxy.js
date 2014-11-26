@@ -41,12 +41,15 @@ function start() {
     
             frontendRequestData = httpObject.parse(request);
             
+            if (frontendRequestBody && configObject.service.log && configObject.service.log.body) {
+                console.log(frontendRequestBody);
+            }
+                        
             route = router.route(
                 frontendRequestData,
                 frontendRequestBody,
                 configObject
             );
-            
             
             if (!route) {
                 response.writeHead(404, {'Content-Type': 'text/plain'});
