@@ -223,16 +223,14 @@ function start() {
                                                                                frontendResponseObj['attributes']);
                                 response.writeHead(frontendResponseStatus, frontendResponseHeaders);
                                 
-                                if (frontendRequestData['method'] != 'HEAD'
-                                 && frontendRequestData['method'] != 'DELETE') {
+                                if (frontendRequestData.method != 'HEAD'
+                                 && frontendRequestData.method != 'DELETE') {
 
-                                    if (frontendResponseObj['dataArray']) {
-                                        response.write(JSON.stringify(frontendResponseObj['dataArray']));
+                                    if (frontendResponseObj.dataArray) {
+                                        response.write(JSON.stringify(frontendResponseObj.dataArray));
                                     } else {
-                                        response.write(frontendResponseObj['data'].toString());
+                                        response.write(frontendResponseObj.data.toString());
                                     }
-                                } else {
-                                    response.write('\n');
                                 }
                                 
                                 response.end();
