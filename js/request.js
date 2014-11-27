@@ -30,10 +30,22 @@ function backend(
     using = route.using;
     
     if (using) {
+        
+        urlPartLength = frontendRequestData["url-parts"].length;
+        
+        processedName = '';
+        
+        if (using.name) {
+            found = frontendRequestData["url-parts"][urlPartLength -2].match(new RegExp(using.name, 'i'));
+            processedName = (found ? found[0] : '')
+        } else {
+            processedName = frontendRequestData["url-parts"][urlPartLength -2]
+        }
+        
         options.url = options.url.replace(
-            frontendRequestData["url-parts"][frontendRequestData["url-parts"].length -2],
+            frontendRequestData["url-parts"][urlPartLength -2],
             (using.prefix ? using.prefix : '') +
-            (using.name ? using.name : '') + 
+            processedName + 
             (using.suffix ? using.suffix : '')
             )
     }
