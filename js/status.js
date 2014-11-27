@@ -1,6 +1,7 @@
 function makeFrontend(
     route,
-    frontendResponseObj
+    frontendResponseObj,
+    frontendRequestData
 ) {
     var result = 200;
     var parsed = {};
@@ -21,7 +22,9 @@ function makeFrontend(
             result = 404;
         } else if (parsed['error']) {
             result = 500;
-        } else if (frontendResponseObj['attributes']['page-row-count'] == '0' && route['method'] == 'GET' ) {
+        } else if (frontendResponseObj['attributes']['page-row-count'] == '0'
+                   && route['method'] == 'GET'
+                   || frontendRequestData['method'] == 'DELETE') {
             result = 204;
         }
     } else {

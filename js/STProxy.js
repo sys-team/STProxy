@@ -216,13 +216,15 @@ function start() {
                                 }
                                 
                                 frontendResponseStatus = status.makeFrontend(route,
-                                                                             frontendResponseObj);
+                                                                             frontendResponseObj,
+                                                                             frontendRequestData);
                                 frontendResponseHeaders = headers.makeFrontend(route,
                                                                                frontendRequestData,
                                                                                frontendResponseObj['attributes']);
                                 response.writeHead(frontendResponseStatus, frontendResponseHeaders);
                                 
-                                if (frontendRequestData['method'] != 'HEAD') {
+                                if (frontendRequestData['method'] != 'HEAD'
+                                 && frontendRequestData['method'] != 'DELETE') {
 
                                     if (frontendResponseObj['dataArray']) {
                                         response.write(JSON.stringify(frontendResponseObj['dataArray']));
