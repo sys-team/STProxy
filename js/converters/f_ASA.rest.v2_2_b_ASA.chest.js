@@ -15,17 +15,24 @@ function convert(
     json = JSON.parse(jsonString);
     
     result = xmlBuilder.create('post');
-    
-    if (!options['titles']) {
-        var keepArray = json;
         
+    if (!options['titles']) {
+
+        if (!(json instanceof Array)) {
+           var arr = [];
+           arr[0] = json;
+           json = arr;
+        }
+        
+        var keepArray = json;
+        json = {};
         json['data'] = [];
         json['data'][options['url-name']] = keepArray;
     }
-
+    
     for(var objArray in json['data']) {
         
-        if (Object.prototype.toString.call(json['data'][objArray]) === '[object Array]') {
+        if (json['data'][objArray] instanceof Array) {
             
             json['data'][objArray].forEach(
             function(obj){
@@ -59,7 +66,6 @@ function convert(
    
     };
 
-    //console.log(result.toString());
     return result.toString();
 }
 
