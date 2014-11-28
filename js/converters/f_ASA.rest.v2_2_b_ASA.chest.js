@@ -27,7 +27,7 @@ function convert(
         var keepArray = json;
         json = {};
         json['data'] = [];
-        json['data'][options['url-name']] = keepArray;
+        json['data'][options.entityName] = keepArray;
     }
     
     for(var objArray in json['data']) {
@@ -36,7 +36,7 @@ function convert(
             
             json['data'][objArray].forEach(
             function(obj){
-                var record = result.ele((options['isPatch'] ? 'm' : 'd'));
+                var record = result.ele((options.isPatch ? 'm' : 'd'));
             
                 record.att('name', objArray);
                 
@@ -46,6 +46,10 @@ function convert(
                     record.att('xid', obj['xid']);
                 }
                 
+                if (options.isPatch && options.idAsParameter) {
+                    record.att(options.idAsParameter, options.entityId);
+                }
+  
                 for (var prop in obj){
                     var attr;
                         

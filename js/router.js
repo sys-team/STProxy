@@ -9,8 +9,8 @@ function route(
     var backend = '';
     var routingMethod ='';
     
-    result['response'] = {};
-    result['response']['headers'] = {};
+    result.response = {};
+    result.response.headers = {};
     
     // globals
     var globalResponseHeaders = configObject.response
@@ -18,38 +18,48 @@ function route(
         
     if (globalResponseHeaders) {
         Object.keys(globalResponseHeaders).forEach(function(key) {
-            result['response']['headers'][key] = globalResponseHeaders[key];
+            result.response.headers[key] = globalResponseHeaders[key];
         });
     }
     
-    Object.keys(configObject['frontend']).forEach(function(key) {
+    Object.keys(configObject.frontend).forEach(function(key) {
         
-            if (frontendRequestData['url'].indexOf(configObject['frontend'][key]['url']) == 0) {
+            if (frontendRequestData.url.indexOf(configObject.frontend[key].url) == 0) {
                 
                 frontend = key;
-                result['frontend'] = key;
-                result['frontendUrl'] = configObject['frontend'][key]['url'];
-                result['frontendLanguage'] = configObject['frontend'][key]['language'];
-                result['output-encoding'] = configObject['frontend'][key]['charset'];
+                result.frontend = key;
+                result.frontendUrl = configObject.frontend[key].url;
+                result.frontendLanguage = configObject.frontend[key].language;
+                result['output-encoding'] = configObject.frontend[key].charset;
                 
-                if (result['frontendUrl'][result['frontendUrl'].length -1] != '/') {
-                    result['frontendUrl'] = result['frontendUrl'] +'/';
+                if (result.frontendUrl[result.frontendUrl.length -1] != '/') {
+                    result.frontendUrl = result.frontendUrl +'/';
                 }
                 
-                if (configObject['frontend'][key]['response']) {
-                    if (configObject['frontend'][key]['response']['headers']) {
-                        Object.keys(configObject['frontend'][key]['response']['headers']).forEach(function(hkey){
-                            result['response']['headers'][hkey] = configObject['frontend'][key]['response']['headers'][hkey];
+                if (configObject.frontend[key].response) {
+                    
+                    if (configObject.frontend[key].response.headers) {
+                        Object.keys(configObject.frontend[key].response.headers).forEach(function(hkey){
+                            result.response.headers[hkey] = configObject.frontend[key].response.headers[hkey];
                         });
                     }
                     
-                    if (configObject['frontend'][key]['response']['metadata']) {
-                         result['response']['metadata'] = configObject['frontend'][key]['response']['metadata'];
+                    if (configObject.frontend[key].response.metadata) {
+                         result.response.metadata = configObject.frontend[key].response.metadata;
                     }
                     
-                    if (configObject['frontend'][key]['response']['titles']) {
-                         result['response']['titles'] = configObject['frontend'][key]['response']['titles'];
+                    if (configObject.frontend[key].response.titles) {
+                         result.response.titles = configObject.frontend[key].response.titles;
                     }
+                }
+                
+                var arrAttr = frontendRequestData.url.replace(configObject.frontend[key].url,'').substring(1).split('/').reverse();
+                
+                if (arrAttr.length > 1) {
+                    result.entityId = arrAttr[0];
+                    result.entityName = arrAttr[1];
+                } else if (arrAttr.length == 1) {
+                    result.entityName = arrAttr[0];
                 }
                 
                 return false;
@@ -61,7 +71,6 @@ function route(
     //console.log(frontend);
     
     if (frontendRequestData.method == 'POST'
-     || frontendRequestData.method == 'PUT'
      || frontendRequestData.method == 'PATCH') {
         
         routingMethod = 'POST';
@@ -120,17 +129,17 @@ function route(
     
     //console.log(backend);
         
-    Object.keys(configObject['backend']).forEach(function(key) {
+    Object.keys(configObject.backend).forEach(function(key) {
             
             if (key == backend ) {
                 
-                result['backend'] = key;
+                result.backend = key;
                 
-                result['language'] = configObject['backend'][key]['language'];
-                result['format'] = configObject['backend'][key]['format'];
-                result['url'] = configObject['backend'][key]['url'];
-                result['encoding'] = configObject['backend'][key]['charset'];
-                result['method'] = configObject['backend'][key]['method'];
+                result.language = configObject.backend[key].language;
+                result.format = configObject.backend[key].format;
+                result.url = configObject.backend[key].url;
+                result.encoding = configObject.backend[key].charset;
+                result.method = configObject.backend[key].method;
                 
                 return false;
             }
@@ -142,12 +151,12 @@ function route(
     result['output-format'] = outputFormat(
                                 configObject,
                                 frontend,
-                                frontendRequestData['url'],
-                                frontendRequestData['headers']);
+                                frontendRequestData.url,
+                                frontendRequestData.headers);
     
     //console.log(result);
     
-    if (result['language'] || result['frontend'] && result['response']['status']) {
+    if (result.language || result.frontend && result.response.status) {
         return result;
     } else {
         return undefined;

@@ -13,24 +13,24 @@ function backendResponse(
     
     result = backendResponseBody;
     
-    resultObj['attributes'] = {};
+    resultObj.attributes = {};
     
-    if (route['response']) {
-        if (route['response']['metadata']) {
-            options['metadata'] = route['response']['metadata'];
+    if (route.response) {
+        if (route.response.metadata) {
+            options.metadata = route.response.metadata;
         }
-        if (route['response']['titles']) {
-            options['titles'] = route['response']['titles'];
+        if (route.response.titles) {
+            options.titles = route.response.titles;
         }
     }
     
     //console.log(backendResponseBody);
 
 
-    if (route['encoding'] != route['output-encoding']) {
+    if (route.encoding != route['output-encoding']) {
         
         var buff = new Buffer(result.toString(), 'binary');
-        var conv = iconv.Iconv(route['encoding'], route['output-encoding']);
+        var conv = iconv.Iconv(route.encoding, route['output-encoding']);
         
         result = conv.convert(buff).toString();
     } else {
@@ -38,7 +38,7 @@ function backendResponse(
         result = buff.toString();
     }
     
-    if (route['format'] != route['output-format']) {
+    if (route.format != route['output-format']) {
         cName = converterName(route, 0);
     
         if (!fs.existsSync(cName)) {
@@ -53,7 +53,7 @@ function backendResponse(
             }
         }
     } else {
-        resultObj['data'] = result;
+        resultObj.data = result;
     }
 
     return resultObj;    
@@ -71,27 +71,29 @@ function frontendRequest(
     var options = {};
     
     result = frontendRequestBody;
-    
-    //console.log(route['output-encoding'],['encoding']);
 
-    if (route['format'] != route['output-format']) {
+    if (route.format != route['output-format']) {
         
-        if (route['language'] == 'ASA.chest'
-         && frontendRequestData['method'] == 'PATCH') {
+        if (route.language == 'ASA.chest'
+         &&(frontendRequestData.method == 'PATCH'
+         || frontendRequestData.method == 'PUT')) {
             
-            options['isPatch'] = true;
+            options.isPatch = true;
             
         }
         
-        if (route['response']) {
-            if (route['response']['titles']) {
-                options['titles'] = route['response']['titles'];
+        if (route.response) {
+            if (route.response.titles) {
+                options.titles = route.response.titles;
             }
         }
-        
-        options['url-name'] = frontendRequestData['url-parts'][frontendRequestData['url-parts'].length -1];
     
-        
+        if (route.using && route.using.idAsParameter) {
+            options.idAsParameter = route.using.idAsParameter;
+        }
+        options.entityId = route.entityId;
+        options.entityName = route.entityName;
+
         cName = converterName(route, 1);
     
         if (!fs.existsSync(cName)) {
@@ -108,10 +110,10 @@ function frontendRequest(
         }
     }
     
-    if (route['output-encoding'] != route['encoding']) {
+    if (route['output-encoding'] != route.encoding) {
         
         var buff = new Buffer(result.toString(), 'binary');
-        var conv = iconv.Iconv(route['output-encoding'], route['encoding']);
+        var conv = iconv.Iconv(route['output-encoding'], route.encoding);
         
         result = conv.convert(buff).toString();
     }
@@ -128,9 +130,9 @@ function converterName(
 ){
     
     if (direction == 0) {
-        return './converters/' + 'b_' + route['language'] + '_2_f_' + route['frontendLanguage'] + '.js';
+        return './converters/' + 'b_' + route.language + '_2_f_' + route.frontendLanguage + '.js';
     } else {
-        return './converters/' + 'f_' + route['frontendLanguage'] + '_2_b_' + route['language'] + '.js';
+        return './converters/' + 'f_' + route.frontendLanguage + '_2_b_' + route.language + '.js';
     }
     
 }
