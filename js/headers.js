@@ -18,13 +18,26 @@ function makeBackend(
             result[value] = frontendRequestData['headers'][value.toLowerCase()];
         }
     });
+    
+    if (route.headersRe) {
+        headersRe = new RegExp(route.headersRe, 'i');
+    }    
 
-    Object.keys(frontendRequestData['headers']).forEach(function(key) {                                                
+    Object.keys(frontendRequestData['headers']).forEach(function(key) {
+        
         if (key.toLowerCase().indexOf('backend-') == 0) {
             result[key.toLowerCase().replace('backend-', '')] = frontendRequestData['headers'][key.toLowerCase()];
         }
+        
+        if (headersRe) {
+            if (headersRe.test(key)) {
+                result[key] =  frontendRequestData.headers[key];
+            }
+        }    
+           
     });
     
+
     return result;
 }
 

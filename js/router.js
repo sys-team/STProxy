@@ -135,11 +135,11 @@ function route(
                 
                 result.backend = key;
                 
-                result.language = configObject.backend[key].language;
-                result.format = configObject.backend[key].format;
-                result.url = configObject.backend[key].url;
+                Object.keys(configObject.backend[key]).forEach(function(bkey){
+                    result[bkey] = configObject.backend[key][bkey];
+                });
+                
                 result.encoding = configObject.backend[key].charset;
-                result.method = configObject.backend[key].method;
                 
                 return false;
             }
