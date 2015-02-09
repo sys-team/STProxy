@@ -21,7 +21,9 @@ function makeBackend(
     
     if (route.headersRe) {
         headersRe = new RegExp(route.headersRe, 'i');
-    }    
+    } else {
+        headersRe = undefined;
+    }
 
     Object.keys(frontendRequestData['headers']).forEach(function(key) {
         
