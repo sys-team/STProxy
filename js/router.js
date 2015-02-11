@@ -146,7 +146,12 @@ function route(
             return true;
         });
     
-
+    
+    if (configObject.response && configObject.response.headers) {
+        Object.keys(configObject.response.headers).forEach(function(key) {
+            result.response.headers[key] = configObject.response.headers[key];
+        });
+    }
 
     result['output-format'] = outputFormat(
                                 configObject,
