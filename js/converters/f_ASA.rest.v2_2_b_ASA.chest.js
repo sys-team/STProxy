@@ -1,4 +1,5 @@
 var xmlBuilder  = require('xmlbuilder');
+var emoji = require('../emoji');
 
 function convert(
     jsonString,
@@ -52,18 +53,19 @@ function convert(
 
                 for (var prop in obj){
                     var attr;
-                    var p;
+                    var propValue;
 
-                    p = obj[prop].replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, '');
+                    //propValue = emoji.remove(obj[prop]);
+                    propValue = emoji.escape(obj[prop]);
 
                     if (prop != 'xid' && prop != 'id') {
-                        if (xidRegexp.test(p)) {
+                        if (xidRegexp.test(propValue)) {
                             attr = record.ele('d');
                             attr.att('name', prop);
-                            attr.att('xid', p);
+                            attr.att('xid', propValue);
                         } else {
 
-                            attr = record.ele((isNaN(p) ? 'string' : 'double'), p);
+                            attr = record.ele((isNaN(propValue) ? 'string' : 'double'), propValue);
                             attr.att('name', prop);
                         }
                     }
