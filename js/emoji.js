@@ -43,15 +43,15 @@ function escape(
     return result;
 }
 
-/*
+
 function unEscape(
     string
 ){
 
-    return string.replace(/\\\\u{([0-9a-f]{5})}/gi,
+    return string.replace(/\\u{([0-9a-f]{5})}/gi,
         function(value) {
 
-            value = value.replace('\\\\u{', '0x').replace('}', '');
+            value = value.replace('\\u{', '0x').replace('}', '');
 
             var output = '';
             if (value > 0xFFFF) {
@@ -64,8 +64,7 @@ function unEscape(
         return output;
     });
 }
-*/
 
 exports.remove = remove;
 exports.escape = escape;
-//exports.unEscape = unEscape;
+exports.unEscape = unEscape;
