@@ -1,4 +1,5 @@
 var xmlBuilder  = require('xmlbuilder');
+var emoji = require('../emoji');
 
 function convert(
     jsonString,
@@ -6,30 +7,31 @@ function convert(
 ) {
     var result;
     var json;
-    
+
     if (!jsonString) {
         return '';
     }
 
     json = JSON.parse(jsonString);
-    
+
     result = xmlBuilder.create('post');
-    
+
     if (Object.prototype.toString.call( json['data'] ) === '[object Array]') {
 
         json['data'].forEach(function(obj){
-            
+
             var record = result.ele((options['isPatch'] ? 'm' : 'd'));
-            
+
             if (obj['name']) {record.att('name', obj['name']);}
             if (obj['xid']) {record.att('xid', obj['xid']);}
-            
+
             if (obj['properties']) {
-            
+
                 for (var prop in obj['properties']){
                     var attr;
+
                     if (typeof obj['properties'][prop] != 'object') {
-                        attr = record.ele((isNaN(obj['properties'][prop]) ? 'string' : 'double'), obj['properties'][prop]);
+                        attr = record.ele((isNaN(obj['properties'][prop]) ? 'string' : 'double'), emoji.escape(obj['properties'][prop]));
                         attr.att('name', prop);
                     } else {
                         if (obj['properties'][prop]['id']) {
@@ -42,10 +44,10 @@ function convert(
                     }
                 };
             }
-       
+
         });
     }
-    
+
     return result.toString();
 }
 
