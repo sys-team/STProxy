@@ -9,9 +9,15 @@ function escape(
 ){
     var result = '';
     var index = -1;
-    var length = string.length;
+    var length;
     var first;
     var second;
+
+    if (string == null) {
+        return null;
+    }
+
+    length = string.length;
 
     while (++index < length) {
         var char = string.charAt(index);
