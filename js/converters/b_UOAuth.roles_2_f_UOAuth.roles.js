@@ -21,24 +21,33 @@ function convert(
         }
     );
 
-    //console.log(json);
+    if (!json || !json.response) {
 
-    if (json.response.error) {
-        error = json.response.error[0]
-    }
+        attr['page-row-count'] = 0;
 
-    if (error) {
-        result.error = error;
+    } else if (json.response.error) {
+
+        error = json.response.error[0];
+
     } else {
 
         result.account = {};
-        account = json.response.account[0];
 
-        Object.keys(account).forEach(
-            function(key){
-                result.account[key] = account[key][0];
+        Object.keys(json.response).forEach(
+            function(rkey){
+
+                if (rkey != '$' && rkey != 'roles') {
+
+                    account = json.response[rkey][0];
+
+                    Object.keys(account).forEach(
+                        function(key){
+                            result.account[key] = account[key][0];
+                        }
+                    );
+                }
             }
-        );
+        )
 
         result.roles = {};
         roles = json.response.roles[0].role;
