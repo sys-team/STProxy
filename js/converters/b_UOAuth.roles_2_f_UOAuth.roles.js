@@ -11,7 +11,7 @@ function convert(
     var resultObj = {};
     var parser = new xml2js.Parser();
     var error;
-    var account;
+    var data;
     var roles;
 
     parser.parseString(
@@ -31,18 +31,18 @@ function convert(
 
     } else {
 
-        result.account = {};
 
         Object.keys(json.response).forEach(
             function(rkey){
 
                 if (rkey != '$' && rkey != 'roles') {
 
-                    account = json.response[rkey][0];
+                    result[rkey] = {};
+                    data = json.response[rkey][0];
 
-                    Object.keys(account).forEach(
+                    Object.keys(data).forEach(
                         function(key){
-                            result.account[key] = account[key][0];
+                            result[rkey][key] = data[key][0];
                         }
                     );
                 }
