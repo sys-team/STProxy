@@ -10,7 +10,6 @@ function convert(
     var attr = {};
     var resultObj = {};
     var parser = new xml2js.Parser();
-    var error;
     var data;
     var roles;
 
@@ -21,13 +20,15 @@ function convert(
         }
     );
 
+    //console.log(json);
+
     if (!json || !json.response) {
 
         attr['page-row-count'] = 0;
 
     } else if (json.response.error) {
 
-        error = json.response.error[0];
+        result.error = json.response.error[0];
 
     } else {
 
