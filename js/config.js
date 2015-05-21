@@ -4,27 +4,27 @@ var log = require('./log');
 
 function readConfig(
     configDir,
-    configName
+    configNameRe
 ) {
     var result = {};
     var str = '';
 
-    if (!configName) {
-        configName = '*.stproxy.json';
+    if (!configNameRe) {
+        configNameRe = /^.*\.stproxy\.json$/i;
     }
-    
+
     if (!configDir) {
         configDir = '../config/';
     }
-    
+
     files = fs.readdirSync(configDir);
-    
+
     files.forEach(function(file){
-        if (file.toLowerCase().indexOf('stproxy.json') != -1) {
-            
+        if (configNameRe.test(file)) {
+
             str = fs.readFileSync(configDir + file, 'utf8');
             log.writeString('Config: ' + configDir + file);
-            
+
             try {
                 var parsed = JSON.parse(str);
             } catch (err) {
@@ -32,13 +32,13 @@ function readConfig(
                 result = undefined;
                 return false;
             }
-            
+
             var r = deepmerge(result, parsed);
             result = r;
-            
+
         }
     });
-    
+
     //console.log(result);
     process.argv.forEach(function (val, index, array) {
         if (val == '--config'){
@@ -47,18 +47,18 @@ function readConfig(
                     result['service']['port'] = array[index +1].replace('service.port=', '');
                 }
             };
-            
+
         }
     });
-    
+
     if (result['frontend']) {
         Object.keys(result['frontend']).forEach(function(key){
             log.writeString('Frontend: ' + key + ' ' + result['frontend'][key]['url'] + ' ' +result['frontend'][key]['language']);
         });
     }
 
-    return JSON.stringify(result);   
-    
+    return JSON.stringify(result);
+
 }
 
 exports.readConfig = readConfig;
