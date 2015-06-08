@@ -45,6 +45,16 @@ function convert(
                 };
             }
 
+            if (options.dataHeaders){
+                var hattr;
+
+                Object.keys(options.dataHeaders).forEach(function(key) {
+                    hattr = record.ele('s', options.dataHeaders[key]);
+                    hattr.att('name', key);
+                });
+            }
+
+
         });
     }
 
