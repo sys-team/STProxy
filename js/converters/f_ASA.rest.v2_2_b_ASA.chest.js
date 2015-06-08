@@ -37,6 +37,7 @@ function convert(
 
             json['data'][objArray].forEach(
             function(obj){
+                var dataHeaders = JSON.parse(JSON.stringify(options.dataHeaders));
                 var record = result.ele((options.isPatch ? 'm' : 'd'));
 
                 record.att('name', objArray);
@@ -54,9 +55,16 @@ function convert(
                 for (var prop in obj){
                     var attr;
                     var propValue;
+                    var propLowerName = prop.toLowerCase();
 
-                    //propValue = emoji.remove(obj[prop]);
-                    propValue = emoji.escape(obj[prop]);
+                    if (dataHeaders && dataHeaders[propLowerName]) {
+                        propValue = dataHeaders[propLowerName];
+                        dataHeaders[propLowerName] = null;
+                    } else {
+                        propValue = obj[prop];
+                    }
+
+                    propValue = emoji.escape(propValue);
 
                     if (prop != 'xid' && prop != 'id') {
                         if (xidRegexp.test(propValue)) {
@@ -71,12 +79,14 @@ function convert(
                     }
                 }
 
-                if (options.dataHeaders){
+                if (dataHeaders){
                     var hattr;
 
-                    Object.keys(options.dataHeaders).forEach(function(key) {
-                        hattr = record.ele('s', options.dataHeaders[key]);
-                        hattr.att('name', key);
+                    Object.keys(dataHeaders).forEach(function(key) {
+                        if (dataHeaders[key]) {
+                            hattr = record.ele('s', dataHeaders[key]);
+                            hattr.att('name', key);
+                        }
                     });
                 }
 
