@@ -37,8 +37,12 @@ function convert(
 
             json['data'][objArray].forEach(
             function(obj){
-                var dataHeaders = JSON.parse(JSON.stringify(options.dataHeaders));
+                var dataHeaders;
                 var record = result.ele((options.isPatch ? 'm' : 'd'));
+
+                if (options.dataHeaders) {
+                    dataHeaders = JSON.parse(JSON.stringify(options.dataHeaders));
+                }
 
                 record.att('name', objArray);
 
