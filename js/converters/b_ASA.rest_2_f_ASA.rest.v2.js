@@ -86,8 +86,10 @@ function processXml(obj){
                 types.push(prop);
             }
         }
-
-        row['id'] = obj['$']['xid'];
+        
+        if (obj.$) {
+            row['id'] = obj['$']['xid'];
+        }
 
         types.forEach(
             function(name){
@@ -102,7 +104,9 @@ function processXml(obj){
                                 row[prop['$']['name']] = processXml(prop.xmlData[0].d[0]);
                             }
                         } else if(prop['$']['name'] != 'id') {
-                            row[prop['$']['name']] = emoji.unEscape(prop['_']);
+                            if (prop['_']) {
+                                row[prop['$']['name']] = emoji.unEscape(prop['_']);
+                            }
                         }
                     }
                 )
