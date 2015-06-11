@@ -42,47 +42,13 @@ function convert(
         json['response']['d'].forEach(
             function(obj){
                 var row = {};
-                var types = [];
-
-                //console.log(obj);
 
                 if (!result[obj['$']['name']]
                 && options['titles']) {
                     result[obj['$']['name']] = [];
                 }
 
-
-                if (typeof obj['_'] != 'string') {
-
-                    for (var prop in obj) {
-                        if (prop != '$'  && types.indexOf(prop == -1)) {
-                            types.push(prop);
-                        }
-                    }
-
-                    row['id'] = obj['$']['xid'];
-
-                    types.forEach(
-                        function(name){
-                            obj[name].forEach(
-                                function(prop){
-                                    //console.log(prop);
-                                    if (prop['$']['parent']) {
-                                        row[prop['$']['name']] = prop['$']['parent-xid'];
-                                    } else if(prop['$']['name'] != 'id') {
-                                        row[prop['$']['name']] = emoji.unEscape(prop['_']);
-                                    }
-                                }
-                            )
-                        }
-                    );
-
-                } else {
-                    row[obj['$']['xid']] = obj['_'];
-
-                    //console.log(obj);
-                }
-
+                row = processXml(obj);
 
                 if (options['titles']) {
                     result[obj['$']['name']].push(row);
@@ -106,5 +72,49 @@ function convert(
     return resultObj;
 }
 
+
+function processXml(obj){
+    var row = {};
+    var types = [];
+
+    //console.log(obj);
+
+    if (typeof obj['_'] != 'string') {
+
+        for (var prop in obj) {
+            if (prop != '$'  && types.indexOf(prop == -1)) {
+                types.push(prop);
+            }
+        }
+
+        row['id'] = obj['$']['xid'];
+
+        types.forEach(
+            function(name){
+                obj[name].forEach(
+                    function(prop){
+                        //console.log(prop);
+
+                        if (prop['$']['parent']) {
+                            row[prop['$']['name']] = prop['$']['parent-xid'];
+                        } else if(name == 'xml'){
+                            if (prop.xmlData && prop.xmlData[0] && prop.xmlData[0].d) {
+                                row[prop['$']['name']] = processXml(prop.xmlData[0].d[0]);
+                            }
+                        } else if(prop['$']['name'] != 'id') {
+                            row[prop['$']['name']] = emoji.unEscape(prop['_']);
+                        }
+                    }
+                )
+            }
+        );
+
+    } else {
+        row[obj['$']['xid']] = obj['_'];
+    }
+
+    return row;
+
+}
 
 exports.convert = convert;
