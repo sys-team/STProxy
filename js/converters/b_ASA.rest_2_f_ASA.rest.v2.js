@@ -23,7 +23,6 @@ function convert(
         }
     });
 
-    //console.log(json['response']['error']);
     if (json['response']['error']) {
 
         if (json['response']['error'][0]['$']) {
@@ -33,32 +32,7 @@ function convert(
         }
     }
 
-    if (json['response']['d']) {
-
-        if (!options['titles']) {
-            result['array'] = [];
-        }
-
-        json['response']['d'].forEach(
-            function(obj){
-                var row = {};
-
-                if (!result[obj['$']['name']]
-                && options['titles']) {
-                    result[obj['$']['name']] = [];
-                }
-
-                row = processXml(obj);
-
-                if (options['titles']) {
-                    result[obj['$']['name']].push(row);
-                } else {
-                    result['array'].push(row);
-                }
-
-            });
-
-    }
+    result = processXml(json, options, 0);
 
 
     resultObj['data'] = JSON.stringify(result);
@@ -66,64 +40,120 @@ function convert(
         resultObj['dataArray'] = result['array'];
     }
 
-    //console.log(resultObj)
     resultObj['attributes']  = attr;
 
     return resultObj;
 }
 
 
-function processXml(obj){
-    var row = {};
-    var types = [];
+function processXml(
+    json,
+    options,
+    level
+){
+    var resultObj = {};
 
-    //console.log(JSON.stringify(obj));
+    //console.log('level:');
+    //console.log(level);
+    //console.log('json');
+    //console.log(JSON.stringify(json));
 
-    if (typeof obj['_'] != 'string') {
+    Object.keys(json).forEach(function(jkey) {
 
-        for (var prop in obj) {
-            if (prop != '$'  && types.indexOf(prop == -1)) {
-                types.push(prop);
-            }
+        if (!options['titles']) {
+            resultObj['array'] = [];
         }
 
-        if (obj.$) {
-            row['id'] = obj['$']['xid'];
-        }
+        //console.log(jkey);
+        if (json[jkey].d){
+            json[jkey].d.forEach(
+                function(obj){
+                    var row = {};
+                    var types = [];
 
-        types.forEach(
-            function(name){
-                obj[name].forEach(
-                    function(prop){
-                        //console.log(JSON.stringify(prop));
+                    //console.log(JSON.stringify(obj));
 
-                        if (prop['$']['parent']) {
+                    if (!resultObj[obj['$']['name']]
+                    && options['titles']) {
+                        resultObj[obj['$']['name']] = [];
+                    }
 
-                            row[prop['$']['name']] = prop['$']['parent-xid'];
 
-                        } else if(name == 'xml'){
-                            if (prop.xmlData && prop.xmlData[0] && prop.xmlData[0].d) {
-                                row[prop['$']['name']] = processXml(prop.xmlData[0].d[0]);
-                            }
-                        } else if(prop['$']['name'] != 'id') {
+                    if (typeof obj['_'] != 'string') {
 
-                            if (prop['_']) {
-                                row[prop['$']['name']] = emoji.unEscape(prop['_']);
-                            }
-                            if (prop.$.xid){
-                                row[prop['$']['name']] = prop.$.xid;
+                        for (var prop in obj) {
+                            if (prop != '$'  && types.indexOf(prop == -1)) {
+                                types.push(prop);
                             }
                         }
+
+                        if (obj.$) {
+                            row['id'] = obj['$']['xid'];
+                        }
+
+                        types.forEach(
+                            function(name){
+                                obj[name].forEach(
+                                    function(prop){
+                                        //console.log('prop:');
+                                        //console.log(JSON.stringify(prop));
+
+                                        if (prop['$']['parent']) {
+
+                                            row[prop['$']['name']] = prop['$']['parent-xid'];
+
+                                        } else if(name == 'xml'){
+
+                                            Object.keys(prop[prop['$']['name']][0]).forEach(function(xkey){
+                                                var xmlPrep = {};
+                                                var tmp;
+
+                                                if (xkey == 'd') {
+                                                    xmlPrep =  prop[prop['$']['name']];
+                                                } else {
+                                                    xmlPrep[xkey] = prop[prop['$']['name']][0][xkey][0];
+                                                }
+
+                                                row[prop['$']['name']] = processXml(xmlPrep, options, level +1).array;
+
+                                            });
+
+
+                                        } else if(prop['$']['name'] != 'id') {
+
+                                            if (prop['_']) {
+                                                row[prop['$']['name']] = emoji.unEscape(prop['_']);
+                                            }
+                                            if (prop.$.xid){
+                                                row[prop['$']['name']] = prop.$.xid;
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        );
+
+                    } else {
+                        row[obj['$']['xid']] = obj['_'];
                     }
-                )
+
+                    //console.log('row:');
+                    //console.log(JSON.stringify(row));
+
+                    if (options['titles']) {
+                        resultObj[obj['$']['name']].push(row);
+                    } else {
+                        resultObj['array'].push(row);
+                    }
+
+                });
             }
-        );
+    });
 
-    } else {
-        row[obj['$']['xid']] = obj['_'];
-    }
+    //console.log('resultObj:');
+    //console.log(resultObj);
 
-    return row;
+    return resultObj;
 
 }
 
