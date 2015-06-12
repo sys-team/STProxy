@@ -77,7 +77,7 @@ function processXml(obj){
     var row = {};
     var types = [];
 
-    //console.log(obj);
+    //console.log(JSON.stringify(obj));
 
     if (typeof obj['_'] != 'string') {
 
@@ -86,7 +86,7 @@ function processXml(obj){
                 types.push(prop);
             }
         }
-        
+
         if (obj.$) {
             row['id'] = obj['$']['xid'];
         }
@@ -95,17 +95,23 @@ function processXml(obj){
             function(name){
                 obj[name].forEach(
                     function(prop){
-                        //console.log(prop);
+                        //console.log(JSON.stringify(prop));
 
                         if (prop['$']['parent']) {
+
                             row[prop['$']['name']] = prop['$']['parent-xid'];
+
                         } else if(name == 'xml'){
                             if (prop.xmlData && prop.xmlData[0] && prop.xmlData[0].d) {
                                 row[prop['$']['name']] = processXml(prop.xmlData[0].d[0]);
                             }
                         } else if(prop['$']['name'] != 'id') {
+
                             if (prop['_']) {
                                 row[prop['$']['name']] = emoji.unEscape(prop['_']);
+                            }
+                            if (prop.$.xid){
+                                row[prop['$']['name']] = prop.$.xid;
                             }
                         }
                     }
