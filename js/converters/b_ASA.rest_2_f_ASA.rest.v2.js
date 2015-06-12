@@ -16,13 +16,6 @@ function convert(
       json = res;
     });
 
-  Object.keys(json['response']['$']).forEach(function(key){
-    attr[key] = json['response']['$'][key];
-    if (options['metadata']) {
-       result[key] = json['response']['$'][key];
-    }
-  });
-
   if (json['response']['error']) {
 
     if (json['response']['error'][0]['$']) {
@@ -30,10 +23,18 @@ function convert(
     } else {
       result['error'] = json['response']['error'][0];
     }
+
+  } else {
+    result = processXml(json, options, 0);
+
+    Object.keys(json['response']['$']).forEach(function(key){
+      attr[key] = json['response']['$'][key];
+      if (options['metadata']) {
+        result[key] = json['response']['$'][key];
+      }
+    });
+
   }
-
-  result = processXml(json, options, 0);
-
 
   resultObj['data'] = JSON.stringify(result);
   if (!options['titles']){

@@ -13,8 +13,8 @@ function escape(
     var first;
     var second;
 
-    if (string == null) {
-        return null;
+    if (string == null || typeof string != 'string') {
+        return string;
     }
 
     length = string.length;
