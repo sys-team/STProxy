@@ -6,8 +6,8 @@ function convert(
     options
 ) {
     var result;
+    var xmlRoot;
     var json;
-    var xidRegexp = /^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/;
 
     if (!jsonString) {
         return '';
@@ -15,7 +15,6 @@ function convert(
 
     json = JSON.parse(jsonString);
 
-    result = xmlBuilder.create('post');
 
     if (!options['titles']) {
 
@@ -31,6 +30,23 @@ function convert(
         json['data'][options.entityName] = keepArray;
     }
 
+
+    xmlRoot = xmlBuilder.create('post');
+
+    result = processJSON(xmlRoot, json, options, 0);
+
+    return xmlRoot.toString();
+}
+
+function processJSON(
+    xmlRoot,
+    json,
+    options,
+    level
+) {
+    var result;
+    var xidRegexp = /^[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$/;
+
     for(var objArray in json['data']) {
 
         if (json['data'][objArray] instanceof Array) {
@@ -38,13 +54,15 @@ function convert(
             json['data'][objArray].forEach(
             function(obj){
                 var dataHeaders;
-                var record = result.ele((options.isPatch ? 'm' : 'd'));
+                var record = xmlRoot.ele((options.isPatch ? 'm' : 'd'));
 
                 if (options.dataHeaders) {
                     dataHeaders = JSON.parse(JSON.stringify(options.dataHeaders));
                 }
 
-                record.att('name', objArray);
+                if (level == 0) {
+                    record.att('name', objArray);
+                }
 
                 if (obj['id']) {
                     record.att('xid', obj['id']);
@@ -57,7 +75,6 @@ function convert(
                 }
 
                 for (var prop in obj){
-                    var attr;
                     var propValue;
                     var propLowerName = prop.toLowerCase();
 
@@ -77,40 +94,35 @@ function convert(
                             attr.att('xid', propValue);
                         } else {
 
-                            var name = {};
-                            name.name = prop;
-
-                            if (typeof propValue == 'boolean'
-                                && options.jsonBoolean
-                                && options.jsonBoolean.name
-                                && options.jsonBoolean[true]
-                                && options.jsonBoolean[false]) {
-
-                                atrr = record.ele(
-                                    options.jsonBoolean.name,
-                                    name,
-                                    (propValue ? options.jsonBoolean.true :options.jsonBoolean.false)
-                                );
-                                attr.att('name', prop);
-
-                            } else if (typeof propValue == 'object'
+                            if (typeof propValue == 'object'
                                 && Object.prototype.toString.call(propValue) == '[object Array]') {
 
-                                atrr = record.ele('xml', name);
+                                var arrAtt;
+                                var name = {};
 
+                                name.name = prop;
 
-                                propValue.forEach(function(key, i){
-                                    var arr;
-                                    arr = atrr.ele((isNaN(key) ? 'string' : 'double'), key);
-                                    arr.att('name', prop + '[' + i.toString() + '].id');
+                                arrAtt = record.ele(
+                                    'array',
+                                    name
+                                )
+
+                                propValue.forEach(function(aValue, i){
+
+                                    if (typeof aValue == 'object') {
+                                        var obj = {data:{}};
+
+                                        obj.data[prop] = [];
+                                        obj.data[prop].push(aValue);
+
+                                        attr = processJSON(arrAtt, obj, options, level +1);
+                                    } else {
+                                        processValue(options, arrAtt, undefined, aValue, level);
+                                    }
                                 });
 
                             } else {
-                                attr = record.ele(
-                                    (isNaN(propValue) ? 'string' : 'double'),
-                                    name,
-                                    propValue
-                                );
+                                processValue(options, record, prop, propValue, level);
                             }
 
                         }
@@ -130,10 +142,48 @@ function convert(
 
             });
         }
-
     };
 
-    return result.toString();
+    return result;
 }
+
+function processValue(
+    options,
+    record,
+    valueName,
+    value,
+    level
+) {
+
+    var attr;
+    var name = {};
+
+    if (valueName) {
+        name.name = valueName;
+    }
+
+    if (typeof value == 'boolean'
+        && options.jsonBoolean
+        && options.jsonBoolean.name
+        && options.jsonBoolean[true]
+        && options.jsonBoolean[false]) {
+
+        atrr = record.ele(
+            options.jsonBoolean.name,
+            name,
+            (value ? options.jsonBoolean.true :options.jsonBoolean.false)
+        );
+
+    } else {
+        attr = record.ele(
+            (isNaN(value) ? 'string' : 'double'),
+            name,
+            value
+        );
+    }
+
+}
+
+
 
 exports.convert = convert;
