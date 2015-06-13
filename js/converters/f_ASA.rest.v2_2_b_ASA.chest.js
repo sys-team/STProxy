@@ -77,8 +77,42 @@ function convert(
                             attr.att('xid', propValue);
                         } else {
 
-                            attr = record.ele((isNaN(propValue) ? 'string' : 'double'), propValue);
-                            attr.att('name', prop);
+                            var name = {};
+                            name.name = prop;
+
+                            if (typeof propValue == 'boolean'
+                                && options.jsonBoolean
+                                && options.jsonBoolean.name
+                                && options.jsonBoolean[true]
+                                && options.jsonBoolean[false]) {
+
+                                atrr = record.ele(
+                                    options.jsonBoolean.name,
+                                    name,
+                                    (propValue ? options.jsonBoolean.true :options.jsonBoolean.false)
+                                );
+                                attr.att('name', prop);
+
+                            } else if (typeof propValue == 'object'
+                                && Object.prototype.toString.call(propValue) == '[object Array]') {
+
+                                atrr = record.ele('xml', name);
+
+
+                                propValue.forEach(function(key, i){
+                                    var arr;
+                                    arr = atrr.ele((isNaN(key) ? 'string' : 'double'), key);
+                                    arr.att('name', prop + '[' + i.toString() + '].id');
+                                });
+
+                            } else {
+                                attr = record.ele(
+                                    (isNaN(propValue) ? 'string' : 'double'),
+                                    name,
+                                    propValue
+                                );
+                            }
+
                         }
                     }
                 }

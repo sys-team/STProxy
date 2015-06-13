@@ -26,7 +26,6 @@ function backendResponse(
 
     //console.log(backendResponseBody);
 
-
     if (route.encoding != route['output-encoding']) {
 
         var buff = new Buffer(result.toString(), 'binary');
@@ -106,6 +105,10 @@ function frontendRequest(
             });
 
             //console.log(options.dataHeaders);
+        }
+
+        if (route.jsonBoolean) {
+            options.jsonBoolean = route.jsonBoolean;
         }
 
         cName = converterName(route, 1);
