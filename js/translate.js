@@ -74,8 +74,7 @@ function frontendRequest(
     if (route.format != route['output-format']) {
 
         if (route.language == 'ASA.chest'
-         &&(frontendRequestData.method == 'PATCH'
-         || frontendRequestData.method == 'PUT')) {
+         && (frontendRequestData.method == 'PATCH') {
 
             options.isPatch = true;
 
