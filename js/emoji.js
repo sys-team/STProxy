@@ -13,7 +13,7 @@ function escape(
     var first;
     var second;
 
-    if (string == null || typeof string != 'string') {
+    if (string == null || typeof string != 'string' || !string) {
         return string;
     }
 
@@ -53,6 +53,10 @@ function escape(
 function unEscape(
     string
 ){
+
+    if (string == null || typeof string != 'string' || !string) {
+        return string;
+    }
 
     return string.replace(/\\u{([0-9a-f]{5})}/gi,
         function(value) {

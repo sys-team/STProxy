@@ -54,7 +54,7 @@ function processJSON(
             json['data'][objArray].forEach(
             function(obj){
                 var dataHeaders;
-                var record = xmlRoot.ele((options.isPatch ? 'm' : 'd'));
+                var record = xmlRoot.ele((options.isPatch && level == 0 ? 'm' : 'd'));
 
                 if (options.dataHeaders) {
                     dataHeaders = JSON.parse(JSON.stringify(options.dataHeaders));
