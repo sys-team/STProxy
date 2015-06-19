@@ -121,12 +121,6 @@ function processJSON(
                                     }
                                 });
 
-                            } else if (typeof propValue == 'object'
-                                && options.jsonObject
-                                && options.jsonObject.name) {
-
-                                processValue(options, record, prop, propValue, level);
-
                             } else {
 
                                 processValue(options, record, prop, propValue, level);
