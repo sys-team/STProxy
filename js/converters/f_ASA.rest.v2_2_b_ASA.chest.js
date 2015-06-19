@@ -121,7 +121,14 @@ function processJSON(
                                     }
                                 });
 
+                            } else if (typeof propValue == 'object'
+                                && options.jsonObject
+                                && options.jsonObject.name) {
+
+                                processValue(options, record, prop, propValue, level);
+
                             } else {
+
                                 processValue(options, record, prop, propValue, level);
                             }
 
@@ -172,6 +179,16 @@ function processValue(
             options.jsonBoolean.name,
             name,
             (value ? options.jsonBoolean.true :options.jsonBoolean.false)
+        );
+
+    } else if (typeof value == 'object'
+        && options.jsonObject
+        && options.jsonObject.name){
+
+        atrr = record.ele(
+            options.jsonObject.name,
+            name,
+            JSON.stringify(value)
         );
 
     } else {

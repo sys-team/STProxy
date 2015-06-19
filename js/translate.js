@@ -110,6 +110,10 @@ function frontendRequest(
             options.jsonBoolean = route.jsonBoolean;
         }
 
+        if (route.jsonObject) {
+            options.jsonObject = route.jsonObject;
+        }
+
         cName = converterName(route, 1);
 
         if (!fs.existsSync(cName)) {
