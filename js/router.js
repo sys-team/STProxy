@@ -1,3 +1,5 @@
+var util = require('./util');
+
 function route(
     frontendRequestData,
     frontendRequestBody,
@@ -24,7 +26,12 @@ function route(
 
     Object.keys(configObject.frontend).forEach(function(key) {
 
-            if (frontendRequestData.url.indexOf(configObject.frontend[key].url) == 0) {
+            //if (frontendRequestData.url.indexOf(configObject.frontend[key].url) == 0) {
+            if (util.arrayBeginsFromArray(
+                    configObject.frontend[key].url.split('/'),
+                    frontendRequestData.url.split('/')
+                )
+            ) {
 
                 frontend = key;
                 result.frontend = key;
