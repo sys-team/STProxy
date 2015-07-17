@@ -44,7 +44,7 @@ function arrayBeginsFromArray(
 ) {
 
     for(var i = 0; i < template.length; i++){
-        if(data.indexOf(template[i]) === -1) {
+        if(data[i] != template[i]) {
             return false;
         }
     }
