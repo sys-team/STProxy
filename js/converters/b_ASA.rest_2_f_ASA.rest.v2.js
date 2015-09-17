@@ -54,13 +54,9 @@ function processXml(
 ){
     var resultObj = {};
 
-    //console.log('level:');
-    //console.log(level);
-    //console.log(JSON.stringify(json));
-
     Object.keys(json).forEach(function(jkey) {
 
-        if (!options['titles'] && !json.Object) {
+        if (!options['titles'] && !('Object' in json)) {
             resultObj['array'] = [];
         }
 
