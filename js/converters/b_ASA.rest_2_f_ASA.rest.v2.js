@@ -52,102 +52,147 @@ function processXml(
   options,
   level
 ){
-  var resultObj = {};
+    var resultObj = {};
 
-  //console.log('level:');
-  //console.log(level);
-  //console.log('json');
-  //console.log(JSON.stringify(json));
+    //console.log('level:');
+    //console.log(level);
+    //console.log(JSON.stringify(json));
 
-  Object.keys(json).forEach(function(jkey) {
+    Object.keys(json).forEach(function(jkey) {
 
-    if (!options['titles']) {
-      resultObj['array'] = [];
-    }
-
-    //console.log(jkey);
-    if (json[jkey].d) json[jkey].d.forEach(function(obj){
-
-      var row = {};
-      var types = [];
-
-      //console.log(JSON.stringify(obj));
-
-      if (!resultObj[obj['$']['name']] && options['titles']) {
-        resultObj[obj['$']['name']] = [];
-      }
-
-
-      if (typeof obj['_'] != 'string') {
-
-        for (var prop in obj) {
-          if (prop != '$'  && types.indexOf(prop == -1)) {
-            types.push(prop);
-          }
+        if (!options['titles'] && !json.Object) {
+            resultObj['array'] = [];
         }
 
-        if (obj.$) {
-          row['id'] = obj['$']['xid'];
-        }
+        if (json[jkey].d) {
 
-        types.forEach(function(name){
-          obj[name].forEach(function(prop){
-            //console.log('prop:');
-            //console.log(JSON.stringify(prop));
+            json[jkey].d.forEach(function(obj){
 
-            if (prop['$']['parent']) {
+                var row = {};
+                var types = [];
 
-              row[prop['$']['name']] = prop['$']['parent-xid'];
+                //console.log(JSON.stringify(obj));
 
-            } else if(name == 'xml') {
-
-              Object.keys(prop[prop['$']['name']][0]).forEach(function(xkey){
-                var xmlPrep = {};
-                var tmp;
-
-                if (xkey == 'd') {
-                  xmlPrep =  prop[prop['$']['name']];
-                } else {
-                  xmlPrep[xkey] = prop[prop['$']['name']][0][xkey][0];
+                if (!resultObj[obj['$']['name']] && options['titles']) {
+                    resultObj[obj['$']['name']] = [];
                 }
 
-                row[prop['$']['name']] = processXml(xmlPrep, options, level +1).array;
+                if (typeof obj['_'] != 'string') {
 
-              });
+                    for (var prop in obj) {
+                        if (prop != '$'  && types.indexOf(prop == -1)) {
+                            types.push(prop);
+                        }
+                    }
+
+                    if (obj.$) {
+                        row['id'] = obj['$']['xid'];
+                    }
+
+                    types.forEach(function(name){
+                        obj[name].forEach(function(prop){
+                            //console.log('prop:');
+                            //console.log(JSON.stringify(prop));
+
+                            if (prop['$']['parent']) {
+
+                                row[prop['$']['name']] = prop['$']['parent-xid'];
+
+                            } else if(name == 'xml') {
+
+                                Object.keys(prop[prop['$']['name']][0]).forEach(function(xkey){
+                                    var xmlPrep = {};
+                                    var tmp;
+
+                                    if (xkey == 'd') {
+                                        xmlPrep =  prop[prop['$']['name']];
+                                    } else {
+                                        xmlPrep[xkey] = prop[prop['$']['name']][0][xkey][0];
+                                    }
+
+                                    var res = processXml(xmlPrep, options, level +1);
+
+                                    row[prop['$']['name']] = (res.array ? res.array : res);
+
+                                });
 
 
-            } else if(prop['$']['name'] != 'id') {
+                            } else if(prop['$']['name'] != 'id') {
 
-              if (prop['_']) {
-                row[prop['$']['name']] = emoji.unEscape(prop['_']);
-              }
-              if (prop.$.xid){
-                row[prop['$']['name']] = prop.$.xid;
-              }
+                                if (prop['_']) {
+                                    row[prop['$']['name']] = emoji.unEscape(prop['_']);
+                                }
+                                if (prop.$.xid){
+                                    row[prop['$']['name']] = prop.$.xid;
+                                }
+                            }
+                        })
+                    });
+
+                } else {
+                    row[obj['$']['xid']] = obj['_'];
+                }
+
+                //console.log('row:');
+                //console.log(JSON.stringify(row));
+
+                if (options['titles']) {
+                    resultObj[obj['$']['name']].push(row);
+                } else {
+                    resultObj['array'].push(row);
+                }
+
+            });
+        } else {
+
+            //console.log(JSON.stringify(json[jkey]));
+
+            var row = {};
+            var types = [];
+
+            for (var prop in json[jkey]) {
+                if (prop != '$'  && types.indexOf(prop == -1)) {
+                    types.push(prop);
+                }
             }
-          })
-        });
 
-      } else {
-        row[obj['$']['xid']] = obj['_'];
-      }
+            types.forEach(function(name){
+                json[jkey][name].forEach(function(prop){
+                    //console.log(prop)
 
-      //console.log('row:');
-      //console.log(JSON.stringify(row));
+                    if (name == 'xml') {
 
-      if (options['titles']) {
-        resultObj[obj['$']['name']].push(row);
-      } else {
-        resultObj['array'].push(row);
-      }
+                        Object.keys(prop[prop['$']['name']][0]).forEach(function(xkey){
+                            var xmlPrep = {};
+                            var tmp;
+
+                            if (xkey == 'd') {
+                                xmlPrep =  prop[prop['$']['name']];
+                            } else {
+                                xmlPrep[xkey] = prop[prop['$']['name']][0][xkey][0];
+                            }
+
+                            var res = processXml(xmlPrep, options, level +1);
+
+                            resultObj[prop['$']['name']] = (res.array ? res.array : res);
+
+                        });
+
+
+                    } else {
+                        resultObj[prop['$']['name']] = emoji.unEscape(prop['_']);
+                    }
+                });
+            });
+
+        }
 
     });
-  });
 
-  //console.log('resultObj:');
-  //console.log(resultObj);
+    //console.log('resultObj:');
+    //console.log(resultObj);
 
-  return resultObj;
+    return resultObj;
 
 }
 

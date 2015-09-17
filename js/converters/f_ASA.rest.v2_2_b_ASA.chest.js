@@ -121,6 +121,37 @@ function processJSON(
                                     }
                                 });
 
+                            } else if (typeof propValue == 'object'
+                                && options.jsonObject
+                                && options.jsonObject.name
+                                && options.jsonObject.type
+                                && options.jsonObject.type.toLowerCase() == 'xml'){
+
+                                var oAtt;
+                                var name = {};
+
+                                name.name = prop;
+
+                                oAtt = record.ele(
+                                    options.jsonObject.name,
+                                    name
+                                )
+
+                                Object.keys(propValue).forEach(function(key){
+
+                                    if (typeof propValue[key] == 'object') {
+                                        var obj = {data:{}};
+
+                                        obj.data[prop] = [];
+                                        obj.data[prop].push(propValue[key]);
+
+                                        attr = processJSON(oAtt, obj, options, level +1);
+
+                                    } else {
+                                        processValue(options, oAtt, key, propValue[key], level);
+                                    }
+                                });
+
                             } else {
 
                                 processValue(options, record, prop, propValue, level);
