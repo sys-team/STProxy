@@ -69,7 +69,7 @@ function processXml(
 
                 //console.log(JSON.stringify(obj));
 
-                if (!resultObj[obj['$']['name']] && options['titles']) {
+                if (obj.$ && !resultObj[obj['$']['name']] && options['titles']) {
                     resultObj[obj['$']['name']] = [];
                 }
 
