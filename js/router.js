@@ -58,6 +58,10 @@ function route(
                     if (configObject.frontend[key].response.titles) {
                          result.response.titles = configObject.frontend[key].response.titles;
                     }
+
+                    if (configObject.frontend[key].response.idName) {
+                         result.response.idName = configObject.frontend[key].response.idName;
+                    }
                 }
 
                 var arrAttr = frontendRequestData.url.replace(configObject.frontend[key].url,'').substring(1).split('/').reverse();

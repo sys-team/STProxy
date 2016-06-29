@@ -22,6 +22,9 @@ function backendResponse(
         if (route.response.titles) {
             options.titles = route.response.titles;
         }
+        if (route.response.idName) {
+            options.idName = route.response.idName;
+        }
     }
 
     //console.log(backendResponseBody);

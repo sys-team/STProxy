@@ -54,6 +54,8 @@ function processXml(
 ){
     var resultObj = {};
 
+    //console.log(options);
+
     Object.keys(json).forEach(function(jkey) {
 
         if (!options['titles'] && !('Object' in json)) {
@@ -121,6 +123,8 @@ function processXml(
                                 if (prop.$.xid){
                                     row[prop['$']['name']] = prop.$.xid;
                                 }
+                            } else if(prop['$']['name'] == 'id' && options.idName){
+                                row[options.idName] = emoji.unEscape(prop['_']);
                             }
                         })
                     });
