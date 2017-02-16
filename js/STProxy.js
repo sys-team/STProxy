@@ -256,6 +256,11 @@ function start() {
     var configObject = {};
     var service;
 
+    process.on('uncaughtException', function(err) {
+      console.error(err.stack)
+      process.exit()
+    });
+
     domain.on('error', function(err){
         console.log(err);
     });
